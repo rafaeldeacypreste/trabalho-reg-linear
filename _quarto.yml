@@ -1,0 +1,30 @@
+project:
+  type: book
+
+book:
+  title: "Trabalho Final de Regressão Linear"
+  subtitle: "Maria Luiza B. Quirino (190113456), Polle (190115670) e Rafael de Acypreste (200060023)"
+  author: "Professora Maria Theresa"
+  date: "12/20/2023"
+  chapters:
+    - index.qmd
+    - objetivos.qmd
+    - metodologia.qmd
+    - resultados.qmd
+    - references.qmd
+
+toc: true
+execute:
+  warning: false
+  echo: false
+  eval: false
+  message: false
+
+bibliography: references.bib
+
+format:
+  PrettyPDF-pdf:
+    keep-tex: true
+
+
+
