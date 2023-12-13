@@ -1,0 +1,26 @@
+install.packages("pacman")
+install.packages("ggplot2")
+installed.packages("dplyr")
+library(dplyr)
+library (ggplot2)
+library(pacman)
+pacman::p_load(openxlsx, tidyverse, ggpubr, car, e1071, patchwork)
+
+# Leitura do banco de dados ####
+
+banco <- readxl::read_xlsx("dados_trabalho_20232.xlsx")
+
+# renomeando as colunas
+names(banco) <- c("id","t_internacao","idade","r_infeccao",
+"prop_culturas", "prop_raiox", "leitos", "escola_medicina", "regiao", "m_dia_pacientes", "enfermeiros", "facilidades_servicos")
+
+# selecionando a amostra
+
+set.seed(2429)
+index <- sample(1:nrow(banco),60)
+dados <- banco[index,]
+val <- banco[-index,]
+
+# exportando amostra
+write.xlsx(dados, "dados_60.xlsx")
+write.xlsx(val, "dados_validação.xlsx")
