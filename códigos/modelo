@@ -1,4 +1,4 @@
-# Modelo de Regressão
+# Modelo de Regressão----
 
 # Base e pacotes----
 pacman::p_load(openxlsx, tidyverse, ggpubr, car, e1071,leaps,MASS,lmtest)
