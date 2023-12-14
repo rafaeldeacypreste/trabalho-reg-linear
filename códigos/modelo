@@ -1,1 +1,28 @@
+# Modelo de Regressão
 
+# Base e pacotes----
+pacman::p_load(openxlsx, tidyverse, ggpubr, car, e1071,leaps,MASS,lmtest)
+
+
+base <- readxl::read_xlsx("dados_60.xlsx")
+base_modelo <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
+                       "prop_raiox","leitos","m_dia_pacientes","enfermeiros",
+                       "facilidades_servicos")]
+
+
+# Correlações----
+# variáveis quantitativas
+cor(base[,c("t_internacao","idade","r_infeccao","prop_culturas",
+            "prop_raiox","leitos","m_dia_pacientes","enfermeiros",
+            "facilidades_servicos")])
+
+
+# Modelo completo----
+# todas as variáveis
+completo_mod <- lm(t_internacao ~ idade + r_infeccao+prop_culturas + prop_raiox +
+                     leitos + m_dia_pacientes + enfermeiros + facilidades_servicos, base)
+
+summary(completo_mod)
+
+
+# Transformações----
