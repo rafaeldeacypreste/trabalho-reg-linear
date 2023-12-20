@@ -1,8 +1,17 @@
 # Resultados
 
-  Nesta etapa da pesquisa, realizou-se a análise preliminar das variáveis em estudo e a construção do modelo de regressão linear múltipla para investigar os fatores associados à duração da internação hospitalar. A abordagem foi enriquecida pela exploração de relações de segunda ordem, com foco específico na influência do número de enfermeiros(as) nas instalações e serviços disponíveis. Além disso, foram incorporadas variáveis regionais para examinar possíveis variações geográficas na duração da internação. Essa abordagem permite uma compreensão mais abrangente dos fatores que contribuem para a complexidade do tempo de internação hospitalar, considerando não apenas características individuais do paciente, mas também aspectos relacionados ao tratamento e ao contexto hospitalar.
+  Nesta etapa da pesquisa, realizou-se a análise preliminar das variáveis em estudo e a construção do modelo de regressão linear
+múltipla para investigar os fatores associados à duração da internação hospitalar. A abordagem foi enriquecida pela exploração de
+relações de segunda ordem, com foco específico na influência do número de enfermeiros(as) nas instalações e serviços disponíveis. 
+Além disso, foram incorporadas variáveis regionais para examinar possíveis variações geográficas na duração da internação. Essa 
+abordagem permite uma compreensão mais abrangente dos fatores que contribuem para a complexidade do tempo de internação hospitalar,
+considerando não apenas características individuais do paciente, mas também aspectos relacionados ao tratamento e ao contexto 
+hospitalar.
 
-  Na avaliação das correlações entre variáveis quantitativas, foram observadas associações positivas e significativas entre a duração da internação e variáveis como risco de infecção, número de leitos, média diária de pacientes, quantidade de enfermeiros(as) e a disponibilidade de facilidades e serviços hospitalares. Essas correlações sugerem a possível influência dessas variáveis na variabilidade da duração da internação.
+  Na avaliação das correlações entre variáveis quantitativas, foram observadas associações positivas e significativas entre a 
+duração da internação e variáveis como risco de infecção, número de leitos, média diária de pacientes, quantidade de enfermeiros(as) 
+e a disponibilidade de facilidades e serviços hospitalares. Essas correlações sugerem a possível influência dessas variáveis na
+variabilidade da duração da internação.
 
 ```{r, echo=FALSE}
 pacman::p_load(openxlsx, tidyverse, ggpubr, car, e1071,leaps,MASS,lmtest)
@@ -44,10 +53,19 @@ pairs(base_corr, lower.panel = panel.smooth, upper.panel = panel.cor,
 -----------------------------------------------------------------------------------------------------------------------------------------
 ```
 
-  Ao explorar a relação entre a idade média dos pacientes e o tempo internação, foi observada uma associação modesta de 0.187, sugerindo que, em geral, pacientes mais idosos podem demandar internações mais prolongadas. O risco de infecção mostrou uma correlação substancial (0.632), o que indica que hospitais com maiores índices de risco infeccioso podem enfrentar internações mais extensas.
-A análise das proporções de culturas de rotina (0.314) e Raio-X de Tórax de rotina (0.389) revelou associações interessantes. Hospitais que realizam mais culturas de rotina e exames de Raio-X de Tórax de rotina parecem enfrentar internações mais longas, o que sugere uma possível relação entre a extensão das investigações diagnósticas e a duração do tratamento.
+  Ao explorar a relação entre a idade média dos pacientes e o tempo internação, foi observada uma associação modesta de 0.187, 
+o que sugere, em geral, que pacientes mais idosos podem demandar internações mais prolongadas. O risco de infecção mostrou uma 
+correlação substancial (0.632), o que indica que hospitais com maiores índices de risco infeccioso podem enfrentar internações mais
+extensas.
+  A análise das proporções de culturas de rotina (0.314) e Raio-X de Tórax de rotina (0.389) revelou associações interessantes.
+Hospitais que realizam mais culturas de rotina e exames de Raio-X de Tórax de rotina parecem enfrentar internações mais longas, o que
+sugere uma possível relação entre a extensão das investigações diagnósticas e a duração do tratamento.
 
-  Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o percentual de facilidades e serviços apresentaram correlações positivas e consistentes (de 0.405, 0.379 e 0.513 respectivamente) com a duração da internação. Esses resultados ressaltam a importância crítica desses fatores na gestão eficaz do tempo de internação, evidenciando a necessidade de estruturas hospitalares adequadas e recursos humanos suficientes. Alem disso, a média diária de pacientes apresentou uma correlação positiva de 0,451 com o tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
+  Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o percentual de facilidades e serviços apresentaram
+correlações positivas e consistentes (de 0.405, 0.379 e 0.513 respectivamente) com a duração da internação. Esses resultados ressaltam 
+a importância crítica desses fatores na gestão eficaz do tempo de internação, evidenciando a necessidade de estruturas hospitalares
+adequadas e recursos humanos suficientes. Alem disso, a média diária de pacientes apresentou uma correlação positiva de 0,451 com o
+tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
 
 ```{r, echo=FALSE}
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -71,11 +89,18 @@ completo_mod <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raio
 #coef(completo_mod)
 ```
 
-  Ao considerar a influência de variáveis relacionadas ao paciente, tratamento e hospital na duração da internação,o modelo de regressão linear múltipla fornece insights valiosos.  O modelo linear múltiplo é representado pela seguinte equação: 
+  Ao considerar a influência de variáveis relacionadas ao paciente, tratamento e hospital na duração da internação,o modelo de 
+regressão linear múltipla fornece insights valiosos.  O modelo linear múltiplo é representado pela seguinte equação: 
 #### COLOCAR EQUAÇÃO
 
-  O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente associado à idade não é estatisticamente significativo (p-valor: 0.529426), sugerindo que a idade média dos pacientes não está fortemente associada à duração da internação.
-  Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: 0.001043), indicando que um aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as Regiões (regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o Risco de Infecção, na explicação da variação na duração da internação.
+  O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente
+associado à idade não é estatisticamente significativo (p-valor: 0.529426), sugerindo que a idade média dos pacientes não está
+fortemente associada à duração da internação.
+  Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: 0.001043), indicando que um
+aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as 
+Regiões(regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais
+variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o 
+Risco de Infecção, na explicação da variação na duração da internação.
 
 ```{r, echo=FALSE}
 -----------------------------------------------------------------------------------------------------------------------------------------
