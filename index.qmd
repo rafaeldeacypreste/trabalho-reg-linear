@@ -1,11 +1,14 @@
 # Introdução {.unnumbered}
 
-This is a Quarto book.
+O Estudo sobre a Eficácia do Controle de Infecções Hospitalares (SENIC, Study on the Efficacy of Nosocomial Infection Control, em inglês) buscou avaliar se programas de controle e vigilância contra infecções reduziram as taxas de infecção hospitalar nos Estados Unidos. Também se desejou avaliar a relação entre algumas características dos hispitais e pacientes nas mudanças de taxa de infecção.
 
-Teste e
+O estudo foi realizado entre 1975-76. Para este trabalho, será utilizada uma amostra aleatória de 113 hospitais, dos 338 hospitais que participaram do estudo. 
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+Os dados coletados ajudarão a responder as seguintes perguntas: 
 
-```{r}
-1 + 1
-```
+1. O número de enfermeiros está relacionado às instalações e serviços do hospital e com a região? Em caso afirmativo, como?
+
+2. A duração da internação está associada a quais fatores? Características do paciente, seu tratamento e hospital têm qual implicação?
+
+Para responder a essas perguntas, será utilizado o arcabouço estatístico de regressões lineares, explicado na [Seção @sec-metodologia].
+

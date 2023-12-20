@@ -1,9 +1,9 @@
 # Objetivos
 
-This is a book created from markdown and executable code.
+O objetivo geral do trabalho é avaliar como questões de estrutura dos hospitais se relacionaram com as infeções hospitalares em hospitais dos Estados Unidos no período de 1975-1976.
 
-See @knuth84 for additional discussion of literate programming.
+Os objetivos específicos são:
 
-```{r}
-1 + 1
-```
+* Avaliar a relação entre o número de enfermeiros com respeito às instalações e região do hospital;
+* Estudar se a duração da internação está associada a características do paciente, seu tratamento e as características do próprio hospital;
+* Descrever o uso de modelos de regressão linear para a análise dos dados coletados na pesquisa.

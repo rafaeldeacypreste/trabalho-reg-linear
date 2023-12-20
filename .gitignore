@@ -7,3 +7,4 @@ _book/site_libs/
 .Rhistory
 .tex
 *.tex
+/.quarto/
