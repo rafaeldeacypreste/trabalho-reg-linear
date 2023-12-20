@@ -1,9 +1,127 @@
 # Resultados
 
-This is a book created from markdown and executable code.
+  Nesta etapa da pesquisa, realizou-se a análise preliminar das variáveis em estudo e a construção do modelo de regressão linear múltipla para investigar os fatores associados à duração da internação hospitalar. A abordagem foi enriquecida pela exploração de relações de segunda ordem, com foco específico na influência do número de enfermeiros(as) nas instalações e serviços disponíveis. Além disso, foram incorporadas variáveis regionais para examinar possíveis variações geográficas na duração da internação. Essa abordagem permite uma compreensão mais abrangente dos fatores que contribuem para a complexidade do tempo de internação hospitalar, considerando não apenas características individuais do paciente, mas também aspectos relacionados ao tratamento e ao contexto hospitalar.
 
-See @knuth84 for additional discussion of literate programming.
+  Na avaliação das correlações entre variáveis quantitativas, foram observadas associações positivas e significativas entre a duração da internação e variáveis como risco de infecção, número de leitos, média diária de pacientes, quantidade de enfermeiros(as) e a disponibilidade de facilidades e serviços hospitalares. Essas correlações sugerem a possível influência dessas variáveis na variabilidade da duração da internação.
 
-```{r}
-1 + 1
+```{r, echo=FALSE}
+pacman::p_load(openxlsx, tidyverse, ggpubr, car, e1071,leaps,MASS,lmtest)
+
+
+base <- readxl::read_xlsx("dados_60.xlsx")
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Correlações-----
+#base para correlações  variáveis quantitativas
+base_corr <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
+                     "prop_raiox","leitos","m_dia_pacientes","enfermeiros",
+                     "facilidades_servicos")]
+
+
+correl <- cor(base_corr)
+-----------------------------------------------------------------------------------------------------------------------------------------
+# grafico das correlações----
+# nome das variáveis para o gráfico
+
+nomes_variaveis <- c("Tempo\nde\nInternação", "Idade", "Risco de\nInfecção", "Proporção\nde Culturas",
+                     "Proporção\nde Raio-X", "Leitos", "Média Diária\nde Pacientes", "Enfermeiros",
+                     "Facilidades\nde Serviços") 
+
+colnames(base) <- nomes_variaveis 
+
+panel.cor <- function(x, y, digits = 3, prefix = "", cex.cor = 1.5)
+{
+  par(usr = c(0, 1, 0, 1))
+  r <- abs(cor(x, y))
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(prefix, txt)
+  text(0.5, 0.5, txt, cex= cex.cor)
+}
+
+cex.labels <- 1.5
+
+pairs(base_corr, lower.panel = panel.smooth, upper.panel = panel.cor,
+      gap = 0, row1attop = FALSE, cex.labels = cex.labels)
+-----------------------------------------------------------------------------------------------------------------------------------------
 ```
+
+  Ao explorar a relação entre a idade média dos pacientes e o tempo internação, foi observada uma associação modesta de 0.187, sugerindo que, em geral, pacientes mais idosos podem demandar internações mais prolongadas. O risco de infecção mostrou uma correlação substancial (0.632), o que indica que hospitais com maiores índices de risco infeccioso podem enfrentar internações mais extensas.
+A análise das proporções de culturas de rotina (0.314) e Raio-X de Tórax de rotina (0.389) revelou associações interessantes. Hospitais que realizam mais culturas de rotina e exames de Raio-X de Tórax de rotina parecem enfrentar internações mais longas, o que sugere uma possível relação entre a extensão das investigações diagnósticas e a duração do tratamento.
+
+  Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o percentual de facilidades e serviços apresentaram correlações positivas e consistentes (de 0.405, 0.379 e 0.513 respectivamente) com a duração da internação. Esses resultados ressaltam a importância crítica desses fatores na gestão eficaz do tempo de internação, evidenciando a necessidade de estruturas hospitalares adequadas e recursos humanos suficientes. Alem disso, a média diária de pacientes apresentou uma correlação positiva de 0,451 com o tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
+
+```{r, echo=FALSE}
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Modeloss ----
+
+# nova base para correção das categorias das v.a's qualitativas
+base_new <- base
+
+# Corrigir as categorias da variável escola_medicina
+base_new$escola_medicina <- factor(base$escola_medicina, levels = c(1, 2), labels = c("Sim", "Não"))
+# Corrigir as categorias da variável regiao
+base_new$regiao <- factor(base$regiao, levels = c(1, 2, 3, 4), labels = c("NE", "NC", "S", "W"))
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Modelo linear múltiplo completo----
+completo_mod <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
+                     leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
+                     facilidades_servicos, data = base_new)
+
+#summary(completo_mod)
+#coef(completo_mod)
+```
+
+  Ao considerar a influência de variáveis relacionadas ao paciente, tratamento e hospital na duração da internação,o modelo de regressão linear múltipla fornece insights valiosos.  O modelo linear múltiplo é representado pela seguinte equação: 
+#### COLOCAR EQUAÇÃO
+
+  O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente associado à idade não é estatisticamente significativo (p-valor: 0.529426), sugerindo que a idade média dos pacientes não está fortemente associada à duração da internação.
+  Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: 0.001043), indicando que um aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as Regiões (regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o Risco de Infecção, na explicação da variação na duração da internação.
+
+```{r, echo=FALSE}
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Modelo com interação entre número de enfermeiros e região-----
+modelo_interacao <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
+                         leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
+                         facilidades_servicos + enfermeiros * regiao, data = base_new)
+
+#summary(modelo_interacao)
+```
+
+
+PIPIPIPÓPÓPÓ.......
+
+
+
+```{r, echo=FALSE}
+-----------------------------------------------------------------------------------------------------------------------------------------
+# Modelo de segunda ordem----
+# Criar variável de interação entre enfermeiros e facilidades_servicos
+base_new$enfermeiros_facilidades <- base_new$enfermeiros * base_new$facilidades_servicos
+
+View(base_new)
+# Modelo de segunda ordem
+completo_mod_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
+                     leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
+                     facilidades_servicos + enfermeiros_facilidades + I(enfermeiros^2) + 
+                     I(facilidades_servicos^2), data = base_new)
+
+#summary(completo_mod_segunda_ordem)
+
+#----------------------------------------------------------------------------------------------------------------------------------------
+# MODELO CORRETO???
+# Criar variáveis de interação de segunda ordem leito e serviços
+base_new$enfermeiros_leitos <- base_new$enfermeiros * base_new$leitos
+base_new$enfermeiros_facilidades <- base_new$enfermeiros * base_new$facilidades_servicos
+base_new$leitos_facilidades <- base_new$leitos * base_new$facilidades_servicos
+
+# Modelo de segunda ordem
+modelo_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
+                             leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
+                             facilidades_servicos + enfermeiros_leitos + enfermeiros_facilidades +
+                             leitos_facilidades + I(enfermeiros^2) + I(leitos^2) + I(facilidades_servicos^2),
+                           data = base_new)
+
+#summary(modelo_segunda_ordem)
+```
+
+PIPIPIPÓPÓPÓ.......
