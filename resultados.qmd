@@ -118,35 +118,8 @@ PIPIPIPÓPÓPÓ.......
 
 
 ```{r, echo=FALSE}
-#----------------------------------------------------------------------------------------------------------------------------------------
-# Modelo de segunda ordem----
-# Criar variável de interação entre enfermeiros e facilidades_servicos
-base_new$enfermeiros_facilidades <- base_new$enfermeiros * base_new$facilidades_servicos
 
-View(base_new)
-# Modelo de segunda ordem
-completo_mod_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
-                     leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
-                     facilidades_servicos + enfermeiros_facilidades + I(enfermeiros^2) + 
-                     I(facilidades_servicos^2), data = base_new)
 
-#summary(completo_mod_segunda_ordem)
-
-#----------------------------------------------------------------------------------------------------------------------------------------
-# MODELO CORRETO???
-# Criar variáveis de interação de segunda ordem leito e serviços
-base_new$enfermeiros_leitos <- base_new$enfermeiros * base_new$leitos
-base_new$enfermeiros_facilidades <- base_new$enfermeiros * base_new$facilidades_servicos
-base_new$leitos_facilidades <- base_new$leitos * base_new$facilidades_servicos
-
-# Modelo de segunda ordem
-modelo_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
-                             leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
-                             facilidades_servicos + enfermeiros_leitos + enfermeiros_facilidades +
-                             leitos_facilidades + I(enfermeiros^2) + I(leitos^2) + I(facilidades_servicos^2),
-                           data = base_new)
-
-#summary(modelo_segunda_ordem)
 ```
 
 PIPIPIPÓPÓPÓ.......
