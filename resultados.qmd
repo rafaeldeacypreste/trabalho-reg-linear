@@ -1,6 +1,443 @@
 
 # Resultados
 
+## Análise Exploratória
+
+Nesta seção, foi feita uma análise exploratória dos dados, é uma etapa essencial para compreender e interpretar. Foram feitas análises gráficas e de medidas resumo das 11 variáveis do banco de dados, com o objetivo de visualizar individualmente, compreender melhor os dados, verificar as possíveis hipóteses para o problema e verificar relação entre elas.
+
+![](Tabela%20dados.png)
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(pacman)
+pacman::p_load(openxlsx,
+               tidyverse,
+               ggpubr,
+               car,
+               kableExtra,
+               e1071,
+               patchwork)
+library(readxl)
+dados <- read_excel("dados_60.xlsx")
+
+
+
+# > 3.1 Boxplots e histogramas ####
+
+# > 3.1.1 Duração da internação ####
+
+box1<- ggplot(dados, aes(x=factor(""),y=(t_internacao)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Duração da Internação")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist1<-ggplot(dados, aes(x=t_internacao))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Duração da Internação \n(Dias)", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.2 Idade ####
+
+box2<- ggplot(dados, aes(x=factor(""),y=(idade)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Idade dos Pacientes")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist2<- ggplot(dados, aes(x=idade))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Idade dos Pacientes", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.3 Risco de Infecção ####
+
+box3<- ggplot(dados, aes(x=factor(""),y=(r_infeccao)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Risco de Infecção (%)")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist3<- ggplot(dados, aes(x=r_infeccao))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Risco de Infecção (%)", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.4 Prop de Culturas de Rotina ####
+
+box4<- ggplot(dados, aes(x=factor(""),y=(prop_culturas)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Prop de Culturas de Rotina")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist4<- ggplot(dados, aes(x= prop_culturas))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Proporção de Culturas \nde Rotina", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.5 Prop de Raio-X de Toráx de Rotina ####
+
+box5<- ggplot(dados, aes(x=factor(""),y=(prop_raiox)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Prop de Raio-X de Tórax")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist5<- ggplot(dados, aes(x= prop_raiox))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Proporção de Raio-X \nde Tórax", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.6 Número de Leitos ####
+
+box6<- ggplot(dados, aes(x=factor(""),y=(leitos)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Número de Leitos")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist6<- ggplot(dados, aes(x= leitos))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Número de Leitos", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.7 Filiação a Escola de Medicina (quali) ####
+
+em<- dados %>% select(escola_medicina) %>%
+  mutate("escmed" = ifelse(escola_medicina == 1, "Sim","Não"))
+
+hist7<- ggplot(em, aes(x=factor(escmed, levels= c("Sim","Não"))))+
+  geom_bar(fill = "#8489FF")+
+  labs(x= "Filiação a Escola\n de Medicina", y= "Frequência absoluta")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=11),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.8 Região (quali) ####
+
+regg<- dados %>% select(regiao) %>%
+  mutate("reg" = case_when(regiao == 1 ~ "NE",
+                           regiao== 2 ~ "NC",
+                           regiao== 3 ~ "S",
+                           regiao== 4~ "W"))
+
+hist8<- ggplot(regg, aes(x=factor(reg, levels= c("NE","NC","S","W"))))+
+  geom_bar(fill = "#8489FF")+
+  labs(x= "Região", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(limits = c(0,20))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=11),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.9 Média diária de Pacientes ####
+
+box9<- ggplot(dados, aes(x=factor(""),y=(m_dia_pacientes)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Média diária de pacientes")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist9<- ggplot(dados, aes(x= m_dia_pacientes))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Média diária \nde pacientes", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.10 Número de Enfermeiros ####
+
+box10<- ggplot(dados, aes(x=factor(""),y=(enfermeiros)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Número de \nEnfermeiro(s)")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist10<- ggplot(dados, aes(x= enfermeiros))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= "Número de \nEnfermeiro(s)", y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+# > 3.1.11 Facilidades e Serviços disponíveis ####
+
+box11<- ggplot(dados, aes(x=factor(""),y=(facilidades_servicos)))+
+  geom_boxplot(fill=c("#8494FF"), width=.5)+
+  guides(fill='none')+
+  stat_summary(fun = "mean", geom = "point", shape = 23, size=3, fill="white")+
+  labs(x="",y="Facilidades e Serviços \n disponíveis")+
+  theme_bw()+
+  theme(axis.title.y = element_text(color = "black", size=9),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+
+hist11<- ggplot(dados, aes(x= facilidades_servicos))+
+  geom_histogram(color="white", fill = "#8494FF")+
+  labs(x= str_wrap("Facilidades e Serviços disponíveis", width = 20) , y= "Frequência absoluta")+
+  theme_bw()+
+  scale_y_continuous(breaks = seq(0,10), limits = c(0,10))+
+  theme(axis.title.y = element_text(color = "black", size=10),
+        axis.title.x = element_text(color="black", size = 10),
+        axis.text = element_text(color = "#000000", size=9.5),
+        panel.border = element_blank(),
+        axis.line.y = element_line(color="black"))
+```
+
+```{r}
+#| fig-height: 7
+#| label: fig-boxplot
+#| fig-cap: Boxplots e das variáveis quantitativas.
+
+# > Juntando os boxplots e histogramas ####
+
+ggarrange(box1, box2, box3,
+          box4, box5, box6, box9, box10, box11,
+          nrow = 3, ncol = 3)
+
+```
+
+```{r}
+#| fig-height: 7
+#| label: fig-hist
+#| fig-cap: Histogramas das variáveis quantitativas.
+
+# > Juntando os boxplots e histogramas ####
+
+ggarrange(hist1, hist2, hist3, hist4,
+          hist5, hist6, hist9, hist10, hist11,
+          nrow=3, ncol=3)
+
+```
+
+
+```{r}
+#| eval: false
+# > 3.2 Tabelas de Frequência quanti ####
+
+# > 3.2.1 Duração da internação ####
+
+summary(dados$t_internacao)
+sd(dados$t_internacao)
+
+# > 3.2.2 Idade ####
+
+summary(dados$idade)
+sd(dados$idade)
+
+# > 3.2.3 Risco de Infecção ####
+
+summary(dados$r_infeccao)
+sd(dados$r_infeccao)
+
+# > 3.2.4 Prop de Culturas de Rotina ####
+
+summary(dados$prop_culturas)
+sd(dados$prop_culturas)
+
+# > 3.2.5 Prop de Raio-X de Toráx de Rotina ####
+
+summary(dados$prop_raiox)
+sd(dados$prop_raiox)
+
+# > 3.2.6 Número de Leitos ####
+
+summary(dados$leitos)
+sd(dados$leitos)
+
+# > 3.2.9 Média diária de Pacientes ####
+
+summary(dados$m_dia_pacientes)
+sd(dados$m_dia_pacientes)
+
+# > 3.2.10 Número de Enfermeiros ####
+
+summary(dados$enfermeiros)
+sd(dados$enfermeiros)
+
+# > 3.2.11 Facilidades e Serviços disponíveis ####
+
+summary(dados$facilidades_servicos)
+sd(dados$facilidades_servicos)
+```
+
+![](Tabela-quati.png){label="Tabela-quanti"}
+
+
+No banco de dados, existem 11 variáveis, das quais 9 são quantitativas, dentre elas, duração da internação, idade, risco de infecção, proporção de culturas de rotina, proporção de raio-x de tórax de rotina, facilidades e serviços disponíveis são contínuas e leitos, média de pacientes e enfermeiros são discretas. Completando a quantidade de variáveis, filiação a escola de medicina e região, que são qualitativas nominais.
+
+Ao analisar o nosso gráfico de boxplot ([Figura @fig-boxplot]), percebe-se a existência de valores que se diferenciam drasticamente da normalidade (*outliers*), mas eles não são semelhantes para todas as variáveis. Em alguns casos, como idade de pacientes e risco de infecção, eles aparecem tanto abaixo como acima do esperado. Em outros casos, como proporção de raio-x de tórax e facilidades e serviços disponíveis, não há valores discrepantes. E em sua maioria existem *outliers* que estão acima do limite superior.
+
+Observando então a [Figura @fig-hist], percebe-se que a influência dos *outliers* é significativa, dado que, nas variáveis que possuem apenas valores acima do limite superior, é visível uma assimetria positiva a direita. Já as que possuem acima do limite superior e abaixo do inferior, e as que não se observa *outliers*, são um pouco mais simétricas. Essa condição que afeta diretamente também nos valores de média e desvio padrão.
+
+
+Observando as variáveis qualitativas, temos como característica, que todas são nominais. No histograma ([Figura @fig-hist-discretas]), temos que a maioria não possui filiação com escola de medicina, observação que é confirmada através da Tabela 3, já que, 81,67% diz não ter.
+
+![](Tabela-quali.png){.unnumbered #fig:tabela3 width="429" caption="Tabela 3"}
+
+```{r}
+#| label: fig-hist-discretas
+#| fig-cap: Histogramas das variáveis discretas.
+
+# > Juntando os boxplots e histogramas ####
+
+ggarrange(hist7, hist8,
+          nrow=1, ncol=2)
+
+```
+
+
+```{r}
+#| eval: false
+# > 3.2 Tabelas de Frequência quali ####
+
+# > 3.2.7 Filiação a Escola de Medicina (quali) ####
+
+dados %>% select(escola_medicina) %>%
+  mutate("escmed" = ifelse(escola_medicina == 1, "Sim","Não")) %>%
+  group_by(escola_medicina) %>% 
+  summarise(freq=n()) |> 
+  kbl(format = "latex") %>% 
+  kable_styling(latex_options = "striped")
+
+# > 3.2.8 Região (quali) ####
+
+dados %>% select(regiao) %>%
+  mutate("reg" = case_when(regiao == 1 ~ "NE",
+                           regiao== 2 ~ "NC",
+                           regiao== 3 ~ "S",
+                           regiao== 4~ "W")) %>%
+  group_by(regiao)%>% summarise(freq= n())
+
+
+```
+
+
+E, para a variável região, existe uma maior frequência nas regiões NE, NC e S do que na região W. Observação que é ressaltada na Tabela 3, já que somente 13,34% se encontra na região W, dividindo então, com valores bem parecidos para o restante das regiões.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Modelo Completo e Seleção de Variáveis
 
 Nesta etapa da pesquisa, realizou-se a análise preliminar das variáveis em estudo e a construção do modelo de regressão linear múltipla para investigar os fatores associados à duração da internação hospitalar. A abordagem foi enriquecida pela exploração de relações de segunda ordem, com foco específico na influência do número de enfermeiros(as) nas instalações e serviços disponíveis. Além disso, foram incorporadas variáveis regionais para examinar possíveis variações geográficas na duração da internação. Essa abordagem permite uma compreensão mais abrangente dos fatores que contribuem para a complexidade do tempo de internação hospitalar, considerando não apenas características individuais do paciente, mas também aspectos relacionados ao tratamento e ao contexto hospitalar.

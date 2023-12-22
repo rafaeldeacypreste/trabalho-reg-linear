@@ -350,6 +350,9 @@ summary(dados$facilidades_servicos)
 sd(dados$facilidades_servicos)
 ```
 
+
+
+
 ![](Tabela-quati.png)
 
 No banco de dados temos 11 variáveis, das quais 9 são quantitativas, dentre elas, duração da internação, idade, risco de infecção, proporção de culturas de rotina, proporção de raio-x de tórax de rotina, facilidades e serviços disponíveis são contínuas e leitos, média de pacientes e enfermeiros são discretas. Completando então a quantidade de variáveis, filiação a escola de medicina e região, que são qualitativas nominais.
