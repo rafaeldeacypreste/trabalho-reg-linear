@@ -19,6 +19,8 @@ em que $y$ é a variável dependente, $x_1, x_2, \ldots, x_n$ são as variáveis
 ## Seleção de variáveis
 
 
+Falar sobre variáveis categóricas, quadráticas
+
 ## Pressupostos de um modelo linear
 
 Um modelo de regressão linear apresenta alguns pressupostos, que devem ser verificados para que o modelo seja considerado adequado. São eles:
