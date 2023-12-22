@@ -19,8 +19,13 @@ pacman::p_load(openxlsx,
 
 
 base <- readxl::read_xlsx("dados_60.xlsx")
------------------------------------------------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
+
+# Correlações----
+=======
+#----------------------------------------------------------------------------------------------------------------------------------------
 # Correlações-----
+>>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 #base para correlações  variáveis quantitativas
 base_corr <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
                      "prop_raiox","leitos","m_dia_pacientes","enfermeiros",
@@ -28,7 +33,11 @@ base_corr <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
 
 
 correl <- cor(base_corr)
------------------------------------------------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
+
+=======
+#----------------------------------------------------------------------------------------------------------------------------------------
+>>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # grafico das correlações----
 # nome das variáveis para o gráfico
 
@@ -51,8 +60,23 @@ panel.cor <- function(x, y, digits = 3, prefix = "", cex.cor = 1.5)
 cex.labels <- 0.9
 
 pairs(base_corr, lower.panel = panel.smooth, upper.panel = panel.cor,
+<<<<<<< HEAD
+      gap = 0, row1attop = FALSE, cex.labels = cex.labels,labels = nomes_variaveis)
+
+base <- readxl::read_xlsx("dados_60.xlsx")
+
+```
+
+Ao explorar a relação entre a idade média dos pacientes e o tempo internação, foi observada uma associação modesta de 0.187, o que sugere, em geral, que pacientes mais idosos podem demandar internações mais prolongadas. O risco de infecção mostrou uma correlação substancial (0.632), o que indica que hospitais com maiores índices de risco infeccioso podem enfrentar internações mais extensas. A análise das proporções de culturas de rotina (0.314) e Raio-X de Tórax de rotina (0.389) revelou associações interessantes. Hospitais que realizam mais culturas de rotina e exames de Raio-X de Tórax de rotina parecem enfrentar internações mais longas, o que sugere uma possível relação entre a extensão das investigações diagnósticas e a duração do tratamento.
+
+Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o percentual de facilidades e serviços apresentaram correlações positivas e consistentes (de 0.405, 0.379 e 0.513 respectivamente) com a duração da internação. Esses resultados ressaltam a importância crítica desses fatores na gestão eficaz do tempo de internação, evidenciando a necessidade de estruturas hospitalares adequadas e recursos humanos suficientes. Alem disso, a média diária de pacientes apresentou uma correlação positiva de 0,451 com o tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
+
+```{r}
+
+
+=======
       gap = 0, row1attop = FALSE, cex.labels = cex.labels)
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 ```
 
   Ao explorar a relação entre a idade média dos pacientes e o tempo internação, foi observada uma associação modesta de 0.187, 
@@ -63,10 +87,15 @@ extensas.
 Hospitais que realizam mais culturas de rotina e exames de Raio-X de Tórax de rotina parecem enfrentar internações mais longas, o que
 sugere uma possível relação entre a extensão das investigações diagnósticas e a duração do tratamento.
 
-Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o percentual de facilidades e serviços apresentaram correlações positivas e consistentes (de 0.405, 0.379 e 0.513 respectivamente) com a duração da internação. Esses resultados ressaltam a importância crítica desses fatores na gestão eficaz do tempo de internação, evidenciando a necessidade de estruturas hospitalares adequadas e recursos humanos suficientes. Alem disso, a média diária de pacientes apresentou uma correlação positiva de 0,451 com o tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
+  Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o percentual de facilidades e serviços apresentaram
+correlações positivas e consistentes (de 0.405, 0.379 e 0.513 respectivamente) com a duração da internação. Esses resultados ressaltam 
+a importância crítica desses fatores na gestão eficaz do tempo de internação, evidenciando a necessidade de estruturas hospitalares
+adequadas e recursos humanos suficientes. Alem disso, a média diária de pacientes apresentou uma correlação positiva de 0,451 com o
+tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
 
 ```{r, echo=FALSE}
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
+>>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # Modeloss ----
 
 # nova base para correção das categorias das v.a's qualitativas
@@ -82,7 +111,10 @@ base_new <-
 # Corrigir as categorias da variável regiao
 base_new$regiao <- factor(base$regiao, levels = c(1, 2, 3, 4), labels = c("NE", "NC", "S", "W"))
 
------------------------------------------------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+#----------------------------------------------------------------------------------------------------------------------------------------
+>>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # Modelo linear múltiplo completo----
 completo_mod <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
                      leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
@@ -122,21 +154,439 @@ summary(modelo_combinado)
 
 ```
 
-  Ao considerar a influência de variáveis relacionadas ao paciente, tratamento e hospital na duração da internação,o modelo de 
-regressão linear múltipla fornece insights valiosos.  O modelo linear múltiplo é representado pela seguinte equação: 
-#### COLOCAR EQUAÇÃO
+Ao considerar a influência de variáveis relacionadas ao paciente, tratamento e hospital na duração da internação, o modelo de regressão linear múltipla fornece insights valiosos. Esse modelo, embora seja mais simples por não incorporar interações ou termos de segunda ordem, é notável em sua capacidade de explicar 67.55% da variação na duração da internação. Isso sugere que, mesmo sem levar em conta complexidades adicionais nas relações entre as variáveis, as características básicas do paciente, seu tratamento e o ambiente hospitalar desempenham um papel crucial na determinação da duração da internação.
 
-  O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente
-associado à idade não é estatisticamente significativo (p-valor: 0.529426), sugerindo que a idade média dos pacientes não está
-fortemente associada à duração da internação.
-  Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: 0.001043), indicando que um
-aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as 
-Regiões(regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais
-variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o 
-Risco de Infecção, na explicação da variação na duração da internação.
+#### colocar equaçaõ?//
 
-```{r, echo=FALSE}
+O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente associado à idade não é estatisticamente significativo (p-valor: 0.529426), sugerindo que a idade média dos pacientes não está fortemente associada à duração da internação.
+
+Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: 0.001043), indicando que um aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as Regiões (regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o Risco de Infecção, na explicação da variação na duração da internação.
+
+Considerando a complexidade das relações entre variáveis, foi incorporarado ao modelo interacões e termos de segunda ordem. Essa abordagem visa explorar nuances que podem ser negligenciadas em um modelo linear. A consideração específica da interação entre enfermeiros e a região W, por exemplo, apresenta um coeficiente negativo significativo (-2.651), o que indica que a região W demonstra uma associação substancial entre o aumento do número de enfermeiros e a redução mais acentuada na duração da internação em comparação com outras regiões geográficas.
+
+O termo quadrático para o número de enfermeiros $(X_{i10}^{2})$ apresenta um coeficiente negativo, sugerindo a possibilidade de saturação no impacto positivo do aumento no número de enfermeiros, indicando que, após um certo ponto, um aumento adicional pode não ter o mesmo efeito positivo na redução da duração da internação. Por outro lado, o termo quadrático para facilidades e servicos disponíveis $(X_{i11}^{2})$não demonstra significância estatística (p-valor: 0.68890), sugerindo que a relação quadrática entre essa variável e a duração da internação não é estatisticamente robusta.
+
+Na avaliação global do modelo, o coeficiente de determinação $(R^{2})$de 0.6971 destaca sua eficácia ao explicar aproximadamente 69.71% da variabilidade na duração da internação, evidenciando sua robusta capacidade preditiva. No âmbito específico do modelo, destaca-se que o risco de infecção apresenta uma associação positiva e estatisticamente significativa (coeficiente: 0.501, p-valor: 0.01265) com a duração da internação. Essa constatação sugere que um aumento no risco de infecção está relacionado a um período mais longo de internação.
+
+Em contraste, variáveis como idade e filiação a escola de medicina não apresentaram significância estatística, indicando que a idade média dos pacientes e a vinculação à escola de medicina não estão fortemente associadas à duração da internação. Além disso, outras variáveis, como proporção de culturas, leitos e facilidades e servicos diponíveis, também não apresentaram significância estatística uniforme, sugerindo que sua inclusão no modelo pode não contribuir significativamente para explicar a variabilidade observada na duração da internação.
+
+Entretanto, surge a necessidade de uma análise mais profunda para assegurar a robustez do modelo. Questões sobre a presença de multicolinearidade entre as variáveis independentes são pertinentes, considerando o potencial impacto na precisão das estimativas. A multicolinearidade, oriunda da alta correlação entre variáveis independentes, pode dificultar a identificação de seus efeitos individuais, comprometendo a interpretação dos resultados.
+
+Dessa forma, a etapa seguinte compreenderá a condução de diagnósticos específicos para avaliar a multicolinearidade e, se necessário, efetuar ajustes no modelo. Paralelamente, serão realizadas análises dos pressupostos da regressão linear múltipla, tais como a normalidade dos resíduos, homocedasticidade e independência, visando garantir a validade das inferências.
+
+Continuando a análise do modelo combinado, foram realizados testes importantes para verificar a adequação dos resíduos ao pressuposto da normalidade e homocedasticidade.
+
+
+
+
+```{r}
+
+
+# PRESSUPOSTOS------
+# Normalidade------
+
+shapiro.test(modelo_combinado$residuals)
+
+#g´rfico----
+qqplot.data <- function (vec, nome){
+  # following four lines from base R's qqline()
+  y <- quantile(vec[!is.na(vec)], c(0.25, 0.75))
+  x <- qnorm(c(0.25, 0.75))
+  slope <- diff(y)/diff(x)
+  int <- y[1L] - slope * x[1L]
+  
+  d <- data.frame(resids = vec)
+  
+  ggplot(d, aes(sample = resids, color = "#4A7B7E")) + stat_qq() + geom_abline(slope = slope, 
+                                                                               intercept = int) +
+    theme_bw() + labs(y=nome, x="Quantil teórico") + 
+    theme(axis.title.y=element_text(colour="black", size=12),
+          axis.title.x = element_text(colour="black", size=12),
+          axis.text = element_text(colour = "black", size=9.5),
+          panel.border = element_blank(),
+          axis.line = element_line(colour = "black"),
+          legend.position="none") + scale_color_manual(values = c("#4A7B7E"))
+  
+}
+qqplot.data(modelo_combinado$residuals, "Resíduos")
+
+# Homocedascidade----
+bptest(modelo_combinado)
+
+#independencia-----
+# residuos studentzados 
+stud0<-rstudent(modelo_combinado) 
+
+
+
+```
+
+O teste de normalidade de Shapiro-Wilk foi aplicado aos resíduos do modelo combinado, resultando em uma estatística W de 0.96745 e um p-valor de 0.1094. O valor de W próximo a 1 e o p-valor superior a 0.05 sugerem que não há evidências suficientes para rejeitar a hipótese nula de normalidade dos resíduos. Assim, os resíduos do modelo parecem seguir uma distribuição normal.
+
+Além disso, foi realizado o teste de Breusch-Pagan para avaliar a homocedasticidade dos resíduos. O teste resultou em uma estatística BP de 17.172, com 17 graus de liberdade e um p-valor de 0.4428. O p-valor maior que 0.05 indica que não há evidências significativas para rejeitar a hipótese nula de homocedasticidade. Portanto, os resíduos parecem exibir homocedasticidade, indicando que a variância dos erros é constante em diferentes níveis de preditores.
+
+
+
+
+
+
+```{r}
+
+
+par(mfrow=c(1,2))
+
+# Gráfico de Resíduos
+plot(modelo_combinado$fitted.values, modelo_combinado$residuals, 
+     xlab = "Valores ajustados", ylab = "Resíduos")
+#title("Gráfico de Resíduos do Modelo")
+
+# Gráfico de Resíduo Studentizado
+plot(modelo_combinado$fitted.values, stud0,
+     xlab = "Valores ajustados", ylab = "Resíduo Studentizado")
+#abline(h = 0)
+#title("Gráfico de Resíduo Studentizado do Modelo")
+```
+
+A análise do gráfico reforça que a independência dos resíduos foi atendida, consolidando a confiabilidade dos resultados obtidos no modelo. A confirmação da normalidade, homocedasticidade e independência dos resíduos fortalece a robustez do modelo, oferecendo suporte à validade das inferências derivadas.
+
+### Seleção de Variáveis
+
+Na presente seção, a análise das variáveis do modelo será aprofundada, visando à seleção criteriosa do modelo reduzido que melhor se adequa à explicação do tempo de internação. Métodos de seleção de variáveis serão utilizados com o intuito de assegurar uma abordagem mais precisa e refinada na identificação dos fatores mais relevantes para o tempo de internação.
+
+
+
+
+
+
+#### tabela de variáveis?//
+
+#### tabela dos modelos e estatísticas?//
+
+```{r}
+# seleção de variáveis
+
+# stepwise
+stepwise_modelo <- step(modelo_combinado, direction = "both")
+summary(stepwise_modelo) #t_internacao ∼ r_infeccao+prop_culturas+leitos+escola_medicina+regiao AIC= 7.71
+
+
+#forward
+forward_modelo <- step(modelo_combinado, direction = "forward")
+summary(forward_modelo)
+
+#backward
+backward_modelo <- step(modelo_combinado, direction = "backward") # AIC=7.71; t_internacao ~ r_infeccao + prop_culturas + leitos + escola_medicina + regiao
+summary(backward_modelo)
+
+
+# Realize a busca exaustiva
+subset_modelo <- regsubsets(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
+                              leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
+                              facilidades_servicos + enfermeiros * regiao + 
+                              I(enfermeiros^2) + I(facilidades_servicos^2), data = base_new, nvmax = 18)
+
+melhores_modelos <- summary(subset_modelo)
+
+# Identificar o modelo com menor BIC
+melhor_modelo <- which.min(melhores_modelos$bic)
+
+# Tabela com os modelos e estatísticas de ajuste
+nvmax = 17
+tabela_modelos <- data.frame(
+  Modelos = sapply(1:nvmax, function(i) {
+    if (i <= length(melhores_modelos$which))
+      paste0(names(melhores_modelos$which)[i], collapse = ", ")
+    else
+      NA
+  }),
+  CP = melhores_modelos$cp,
+  RSQ = melhores_modelos$rsq,
+  ADJR2 = melhores_modelos$adjr2,
+  BIC = melhores_modelos$bic
+)
+
+
+tabela_modelos
+```
+
+```{r}
+## gráficos de r2, r2 ajustado, cp e bic ----
+n_parametros<-as.numeric(rownames(summary(subset_modelo)$which))+1
+par(mfrow = c(2, 2))
+
+plot_r2 <- plot(n_parametros, melhores_modelos$rsq,xlab="N° de parâmetros",ylab="R Quadrado")
+
+plot_r2ajustado <- plot(n_parametros,melhores_modelos$adjr2,xlab="N° de parâmetros",ylab="R Quadrado Ajustado")
+
+plot_cp <- plot(n_parametros,melhores_modelos$cp,xlab="N° de parâmetros",ylab="Cp de Mallows")
+
+plot_bic <- plot(n_parametros,melhores_modelos$bic,xlab="N° de parâmetros",ylab="BIC")
+
+```
+
+Ao analisar o crescimento nos níveis dos gráficos em relação ao $R^{2}$, $R^{2}$ ajustado, Critério de Pressão de Mallows (Cp) e Critério de Informação Bayesiano (BIC) até 6 parâmetros, observa-se um aumento em ambos os indicadores até atingir esse ponto. Contudo, ao aplicar métodos de seleção de variáveis, como o Backward e o Stepwise, é escolhido o modelo que mantém 7 parâmetros, enquanto no método Forward, nenhuma variável é removida. Diante dessa divergência, optou-se por trabalhar com dois modelos distintos, buscando determinar qual deles melhor atende aos objetivos específicos do trabalho.
+
+Na análise dos modelos de regressão escolhidos, destaca-se o Modelo com 5 Variáveis, que incorpora as características de idade, risco de infecção, regiaoW, facilidades e servicos disponíveis e interaçao da regiaoS com o número de enfermeiros. Expresso pela equação:
+
+$$
+ Y_{i}= \beta _{0}+\beta _{1}X_{2}+\beta _{2}X_{3}+\beta _{3}X_{10}+\beta _{4}X_{13}+\beta _{5}X_{9}X_{12}+\varepsilon_{i}
+$$
+
+
+
+
+Além disso, o Modelo com 6 Variáveis expande a abordagem ao incorporar as variáveis de idade, risco de infecção, regiaoW, termo quadrático de facilidades e servicos disponíveis, interação entre regiaoNC e número de enfermeiros e interação entre a regiaoS e número de enfermeiros. A equação do modelo é expressa por:
+
+$$
+ Y_{i}= \beta _{0}+\beta _{1}X_{2}+\beta _{2}X_{3}+\beta _{3}X_{10}+\beta _{4}X_{13}^{2}+\beta _{5}X_{8}X_{12}+\beta _{6}X_{9}X_{12}+\varepsilon_{i}
+$$
+
+```{r}
+# modelos escolhidos-----
+
+# base modelos escolhidos
+base_mods <- base
+
+library(dplyr)
+
+# Adicione variáveis dummy para a variável qualitativa escola_medicina
+base_mods <- base_mods %>%
+  mutate(escola_medicinaSim = ifelse(escola_medicina == 1, 1, 0),
+         escola_medicinaNao = ifelse(escola_medicina == 2, 1, 0))
+
+# Adicione variáveis dummy para a variável qualitativa regiao
+base_mods <- base_mods %>%
+  mutate(regiaoNE = ifelse(regiao == 1, 1, 0),
+         regiaoNC = ifelse(regiao == 2, 1, 0),
+         regiaoS = ifelse(regiao == 3, 1, 0),
+         regiaoW = ifelse(regiao == 4, 1, 0))
+
+
+modelo_select1 <- lm(t_internacao~idade + r_infeccao + regiaoW + 
+                       facilidades_servicos+ regiaoS*enfermeiros,
+                     data = base_mods)
+summary(modelo_select1)
+
+modelo_select2 <- lm(t_internacao~ idade+ r_infeccao +regiaoW+
+                       I(facilidades_servicos^2)+ regiaoNC*enfermeiros+
+                       regiaoS*enfermeiros, data = base_mods)
+summary(modelo_select2)
+
+
+
+```
+
+```{r}
+# análise dos pressupostos dos modelos selecionados----
+
+# normalidade----
+shapiro.test(modelo_select1$residuals)
+shapiro.test(modelo_select2$residuals)
+
+qqplot.data(modelo_select1$residuals, "Resíduos")
+qqplot.data(modelo_select2$residuals, "Resíduos")
+
+# homogeneidade breush pagan-----
+bptest(modelo_select1)
+bptest(modelo_select2)
+
+# residuos studentzados 
+stud1 <- rstudent(modelo_select1)
+stud2 <- rstudent(modelo_select2)
+
+# gráficos----
+par(mfrow=c(2,2))
+plot(modelo_select1$fitted.values, modelo_select1$residuals, xlab = "Valores ajustados",ylab = "Resísuos")
+#title("Gráfico de Resíduos do Modelo 1")
+plot(modelo_select1$fitted.values, stud1,xlab = "Valores ajustados",ylab = "Resísuo Studentizado")
+#abline(h=0)
+#title("Gráfico de Resíduo Studentizado do Modelo 1")
+plot(modelo_select2$fitted.values, modelo_select2$residuals,xlab = "Valores ajustados",ylab = "Resísuos")
+#title("Gráfico de Resíduos do Modelo 2")
+plot(modelo_select2$fitted.values, stud2,xlab = "Valores ajustados",ylab = "Resísuo Studentizado")
+#abline(h=0)
+#title("Gráfico de Resíduo Studentizado do Modelo 2")
+
+```
+
+```{r}
+
+## Teste linear geral----
+# H0: modelo reduzido
+# H1: modelo completo
+# com nivel de 5% de significanca NAO rejeita H0
+resultado_teste1 <- anova(modelo_select1, modelo_combinado)
+resultado_teste1
+resultado_teste2 <- anova(modelo_select2, modelo_combinado)
+resultado_teste2
+
+## Multicolinearidade ----
+# calculo do vif
+library(car)
+
+(vif<-vif(modelo_select1)) 
+mean(vif)
+
+(vif<-vif(modelo_select2)) 
+mean(vif)
+```
+
+Com base apenas na avaliação da multicolinearidade, o modelo 1 pode ser
+considerado um pouco mais robusto em relação a esse aspecto, apresentando uma média (2.202784) de VIF (Fator de Inflação da Variância) inferior em comparação com o modelo 2 (3.021946). Além disso, os resultados dos testes lineares gerais entre os modelos reduzidos e completos indicam que a inclusão das variáveis adicionais não resulta em uma melhoria estatisticamente significativa na explicação do tempo de internação para ambos os modelos selecionados. Em ambas as comparações, o p-valor associado ao teste F é maior que o nível de significância de 5%, levando à não rejeição da hipótese nula (H0) de que o modelo reduzido é suficiente. Assim, considerando a robustez em relação à multicolinearidade, evidenciada pela média de VIF, e a adequação estatística dos modelos, optamos por escolher o modelo 1 como a abordagem mais parcimoniosa para explicar a variabilidade no tempo de internação.
+
+
+
+
+```{r}
+# #correlograma do modelo escolhido MODELO 1----
+dados_correlograma <- base_mods %>% dplyr::select(c(t_internacao, r_infeccao, regiaoW,
+                                                facilidades_servicos, regiaoS, enfermeiros))
+
+dados_correlograma$t_internacao <- log(dados_correlograma$t_internacao)
+
+
+
+ggpairs(
+  dados_correlograma, axisLabels="none",
+  lower = list(continuous = wrap("points", alpha = 0.7, size=0.8), 
+               combo = wrap("dot", alpha = 0.4, size=0.4)),
+) 
+
+
+
+## Medidas de Influencia ----
+### Dffits ----
+## 
+indice <- c(1:60)
+dffits <- abs(dffits(modelo_select1))
+
+par(mfrow=c(1,1))
+plot(indice,dffits, type = "l")
+abline(h = 1, lty = 2)
+
+
+### hii ----
+p <- length(coef(modelo_select1))
+n <- nrow(base_mods)
+
+
+hii <- hatvalues(modelo_select1)
+plot(indice,hii,type="l") 
+abline(h=2*p/n)
+
+
+### DFBEtas ----
+dfbetaPlots(modelo_select1) 
+
+
+### DCOOK ----
+dcook <- cooks.distance(modelo_select1)
+indice_max_cook <- which.max(dcook)
+plot(indice,dcook, type = "l")
+points(indice[indice_max_cook], dcook[indice_max_cook], col = "red", pch = 16)
+text(indice[indice_max_cook], dcook[indice_max_cook], 
+     labels = sprintf("Índice %d\nCook's D: %.3f", indice[indice_max_cook], 
+                      dcook[indice_max_cook]), pos = 4, col = "red", cex = 0.8)
+
+### PRESS ----
+medinflu<-influence.measures(modelo_select1)
+PRESS <-modelo_select1$residuals/(1-medinflu$infmat[,12]) 
+rstandard(modelo_select1,type="predictive")
+PRESS_medida <- sum((rstandard(modelo_select1,type = "predictive"))^2)
+plot(indice,PRESS, type = "l")
+
+
+# Amostra de validação----
+valid <- readxl::read_xlsx("dados_validação.xlsx")
+
+
+# Adicione variáveis dummy para a variável qualitativa escola_medicina
+valid <- valid %>%
+  mutate(escola_medicinaSim = ifelse(escola_medicina == 1, 1, 0),
+         escola_medicinaNao = ifelse(escola_medicina == 2, 1, 0))
+
+# Adicione variáveis dummy para a variável qualitativa regiao
+valid <- valid %>%
+  mutate(regiaoNE = ifelse(regiao == 1, 1, 0),
+         regiaoNC = ifelse(regiao == 2, 1, 0),
+         regiaoS = ifelse(regiao == 3, 1, 0),
+         regiaoW = ifelse(regiao == 4, 1, 0))
+
+
+modelo_validacao <- lm(t_internacao~idade + r_infeccao + regiaoW + 
+                                           facilidades_servicos+ regiaoS*enfermeiros,
+                                         data = valid)
+summary(modelo_validacao)
+aov(modelo_validacao)
+anova(modelo_validacao)
+anova(modelo_select1)
+
+## Pressupostos----
+### Normalidade ----
+shapiro.test(modelo_validacao$residuals)
+qqplot.data(modelo_validacao$residuals, "Resíduos")
+
+### Homocedasticidade ----
+bptest(modelo_validacao)
+### Independencia----
+par(mfrow = c(1, 2))
+plot(modelo_validacao$residuals, modelo_validacao$fitted.values)
+# residuos studentzados e valores ajustados
+stud3<-rstudent(modelo_validacao) 
+plot(modelo_validacao$fitted.values,stud3)
+abline(h=0)
+
+## MSPR----
+previstos <- predict(modelo_select1)[1:60]
+# Calcular o MSPR
+mspr <- mean((previstos - valid$t_internacao)^2)
+mspr
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<<<<<<< HEAD
+```{r}
+#| eval: false
 -----------------------------------------------------------------------------------------------------------------------------------------
+=======
+```{r, echo=FALSE}
+#----------------------------------------------------------------------------------------------------------------------------------------
+>>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # Modelo com interação entre número de enfermeiros e região-----
 modelo_interacao <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
                          leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
@@ -150,7 +600,9 @@ PIPIPIPÓPÓPÓ.......
 
 
 
-```{r, echo=FALSE}
+<<<<<<< HEAD
+```{r}
+#| eval: false
 -----------------------------------------------------------------------------------------------------------------------------------------
 # Modelo de segunda ordem----
 # Criar variável de interação entre enfermeiros e facilidades_servicos
@@ -162,24 +614,11 @@ completo_mod_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_cultur
                      leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
                      facilidades_servicos + enfermeiros_facilidades + I(enfermeiros^2) + 
                      I(facilidades_servicos^2), data = base_new)
+=======
+```{r, echo=FALSE}
+>>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 
-#summary(completo_mod_segunda_ordem)
 
-#----------------------------------------------------------------------------------------------------------------------------------------
-# MODELO CORRETO???
-# Criar variáveis de interação de segunda ordem leito e serviços
-base_new$enfermeiros_leitos <- base_new$enfermeiros * base_new$leitos
-base_new$enfermeiros_facilidades <- base_new$enfermeiros * base_new$facilidades_servicos
-base_new$leitos_facilidades <- base_new$leitos * base_new$facilidades_servicos
-
-# Modelo de segunda ordem
-modelo_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
-                             leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
-                             facilidades_servicos + enfermeiros_leitos + enfermeiros_facilidades +
-                             leitos_facilidades + I(enfermeiros^2) + I(leitos^2) + I(facilidades_servicos^2),
-                           data = base_new)
-
-#summary(modelo_segunda_ordem)
 ```
 
 PIPIPIPÓPÓPÓ.......
