@@ -11,6 +11,7 @@ book:
     - objetivos.qmd
     - metodologia.qmd
     - resultados.qmd
+    - conclusao.qmd
     - references.qmd
 
 toc: true

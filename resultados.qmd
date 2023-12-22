@@ -964,13 +964,19 @@ vif<-vif(modelo_select2)
 vif_modelo2 <- mean(vif)
 ```
 
-Com base apenas na avaliação da multicolinearidade, o modelo 1 pode ser
-considerado um pouco mais robusto em relação a esse aspecto, apresentando uma média (`format(round(vif_modelo1, digits = 4), decimal.mark = ",")`) de VIF (Fator de Inflação da Variância) inferior em comparação com o modelo 2 (`format(round(vif_modelo2, digits = 4), decimal.mark = ",")`). Além disso, os resultados dos testes lineares gerais entre os modelos reduzidos e completos indicam que a inclusão das variáveis adicionais não resulta em uma melhoria estatisticamente significativa na explicação do tempo de internação para ambos os modelos selecionados. Em ambas as comparações, o p-valor associado ao teste F é maior que o nível de significância de 5%, levando à não rejeição da hipótese nula (H0) de que o modelo reduzido é suficiente. Assim, considerando a robustez em relação à multicolinearidade, evidenciada pela média de VIF, e a adequação estatística dos modelos, optamos por escolher o modelo 1 como a abordagem mais parcimoniosa para explicar a variabilidade no tempo de internação.
+Com base apenas na avaliação da multicolinearidade, o modelo 1 pode ser considerado um pouco mais robusto em relação a esse aspecto, apresentando uma média (`r format(round(vif_modelo1, digits = 4), decimal.mark = ",")`) de VIF (Fator de Inflação da Variância) inferior em comparação com o modelo 2 (`r format(round(vif_modelo2, digits = 4), decimal.mark = ",")`). 
 
+Além disso, os resultados dos testes lineares gerais entre os modelos reduzidos e completos indicam que a inclusão das variáveis adicionais não resulta em uma melhoria estatisticamente significativa na explicação do tempo de internação para ambos os modelos selecionados. 
+
+Em ambas as comparações, o p-valor associado ao teste F é maior que o nível de significância de 5%, levando à não rejeição da hipótese nula ($H_0$) de que o modelo reduzido é suficiente. Assim, considerando a robustez em relação à multicolinearidade, evidenciada pela média de VIF, e a adequação estatística dos modelos, optou-se por escolher o modelo 1 como a abordagem mais parcimoniosa para explicar a variabilidade no tempo de internação. Diante disso, inicia-se a análise do modelo a partir da [Figura @fig-correlograma], que apresenta seu correlograma.
 
 
 
 ```{r}
+#| fig-height: 6.5
+#| label: fig-correlograma
+#| fig-cap: Correlograma do Modelo 1.
+
 # #correlograma do modelo escolhido MODELO 1----
 dados_correlograma <- base_mods %>% dplyr::select(c(t_internacao, r_infeccao, regiaoW,
                                                 facilidades_servicos, regiaoS, enfermeiros))
@@ -985,7 +991,16 @@ ggpairs(
                combo = wrap("dot", alpha = 0.4, size=0.4)),
 ) 
 
+```
 
+## Valores Influentes
+
+Na presente seção, foram adotadas medidas destinadas a ressaltar a influência de observações individuais nos parâmetros do modelo. As métricas utilizadas compreendem DFBetas, DFFits, *Cook's Distance*, *Leverage* e *Influence Total*.
+
+```{r}
+#| label: fig-dffits
+#| fig-cap: Gráficos de DFFits e Hii.
+#| fig-height: 3
 
 ## Medidas de Influencia ----
 ### Dffits ----
@@ -993,7 +1008,7 @@ ggpairs(
 indice <- c(1:60)
 dffits <- abs(dffits(modelo_select1))
 
-par(mfrow=c(1,1))
+par(mfrow=c(1, 2))
 plot(indice,dffits, type = "l")
 abline(h = 1, lty = 2)
 
@@ -1006,11 +1021,23 @@ n <- nrow(base_mods)
 hii <- hatvalues(modelo_select1)
 plot(indice,hii,type="l") 
 abline(h=2*p/n)
+```
 
+
+```{r}
+#| fig-height: 6
+#| label: fig-DFBetas
+#| fig-cap: Gráficos de DFBetas e DFBetas Studentizados.
 
 ### DFBEtas ----
 dfbetaPlots(modelo_select1) 
 
+```
+
+
+```{r}
+#| label: fig-cooks-distance
+#| fig-cap: Gráfico de Cook's Distance.
 
 ### DCOOK ----
 dcook <- cooks.distance(modelo_select1)
@@ -1020,14 +1047,39 @@ points(indice[indice_max_cook], dcook[indice_max_cook], col = "red", pch = 16)
 text(indice[indice_max_cook], dcook[indice_max_cook], 
      labels = sprintf("Índice %d\nCook's D: %.3f", indice[indice_max_cook], 
                       dcook[indice_max_cook]), pos = 4, col = "red", cex = 0.8)
+```
+
+
+Os resultados indicam que algumas observações exercem influência substancial sobre o modelo. As observações de número 6, 35, 36, 38, 47 e 50 demonstraram um impacto significativo em diversas variáveis, evidenciando influência em diferentes aspectos do modelo. Por exemplo, a observação 6 revelou um efeito significativo nas variáveis idade e facilidades e servicos disponíveis.
+
+No que diz respeito à DFFits ([Figura @fig-dffits]), destaca-se a observção 6, indicando uma influência considerável sobre a estimativa ajustada da resposta. Analisando Cook's Distance ([Figura @fig-cooks-distance]), observou-se que as observações 6, 38 e outras se destacaram, sugerindo uma influência global no modelo. Essas observações podem ter um impacto desproporcional nas estimativas do modelo.
+
+
+
+```{r}
+#| label: fig-leverage
+#| fig-cap: Gráfico de Leverage (Hat).
 
 ### PRESS ----
 medinflu<-influence.measures(modelo_select1)
 PRESS <-modelo_select1$residuals/(1-medinflu$infmat[,12]) 
-rstandard(modelo_select1,type="predictive")
+# rstandard(modelo_select1,type="predictive")
 PRESS_medida <- sum((rstandard(modelo_select1,type = "predictive"))^2)
 plot(indice,PRESS, type = "l")
 
+
+```
+
+
+No contexto da avaliação de Leverage (*Hat*), as observações 6 e 38 foram identificadas com valores elevados, indicando que estão "distantes" das demais em termos das variáveis independentes. Isto pode ser observado na [Figura @fig-leverage]. 
+
+Finalmente, ao avaliar a Influence Total, observações 6, 7, 28 e 38 foram identificadas como globalmente influentes, destacando a necessidade de uma análise mais aprofundada desses pontos específicos.
+
+
+```{r}
+#| output: asis
+#| label: tbl-modelo-validacao
+#| tbl-cap: Estatísticas do Modelo de Validação.
 
 # Amostra de validação----
 valid <- readxl::read_xlsx("dados_validação.xlsx")
@@ -1049,31 +1101,75 @@ valid <- valid %>%
 modelo_validacao <- lm(t_internacao~idade + r_infeccao + regiaoW + 
                                            facilidades_servicos+ regiaoS*enfermeiros,
                                          data = valid)
-summary(modelo_validacao)
-aov(modelo_validacao)
-anova(modelo_validacao)
-anova(modelo_select1)
+# summary(modelo_validacao)
+# aov(modelo_validacao)
+# anova(modelo_validacao)
+# anova(modelo_select1)
 
-## Pressupostos----
-### Normalidade ----
-shapiro.test(modelo_validacao$residuals)
-qqplot.data(modelo_validacao$residuals, "Resíduos")
 
-### Homocedasticidade ----
-bptest(modelo_validacao)
-### Independencia----
-par(mfrow = c(1, 2))
-plot(modelo_validacao$residuals, modelo_validacao$fitted.values)
-# residuos studentzados e valores ajustados
-stud3<-rstudent(modelo_validacao) 
-plot(modelo_validacao$fitted.values,stud3)
-abline(h=0)
+
+stargazer(modelo_select1,
+          modelo_validacao,
+          column.labels=c("Modelo de treinamento", "Modelo de validação"),
+          model.numbers = FALSE,
+          single.row=TRUE,
+          report=("vc*p"),
+          header = FALSE
+          )
+
+
+
+```
+
+
+```{r}
 
 ## MSPR----
-previstos <- predict(modelo_select1)[1:60]
+previstos <- predict(modelo_select1)[1:53]
 # Calcular o MSPR
 mspr <- mean((previstos - valid$t_internacao)^2)
-mspr
+
+
+
+
+
+#R2 validação
+SS_res_val <- sum(modelo_validacao$residuals^2)
+SS_tot_val <- sum((valid$t_internacao - mean(valid$t_internacao))^2)
+R2_val <- 1 - SS_res_val / SS_tot_val
+# R2_val
+# MSE validação
+n_val <- length(valid$t_internacao)
+MSE_val <- sum((modelo_validacao$residuals)^2) / n
+# MSE_val
+
+# r2 modelo_select1
+SS_res_mod <- sum(modelo_select1$residuals^2)
+SS_tot_mod <- sum((base_mods$t_internacao - mean(base_mods$t_internacao))^2)
+R2_mod <- 1 - SS_res_mod / SS_tot_mod
+
+# MSE modelo_select
+n_mod <- length(base_mods$t_internacao)
+MSE_mod <- sum((modelo_select1$residuals)^2) / n
+
+
+
+
+# Predições no conjunto de validação-----
+predicoes_validacao <- predict(modelo_select1, newdata = valid)
+
+# R²
+SS_res_val <- sum((valid$t_internacao - predicoes_validacao)^2)
+SS_tot_val <- sum((valid$t_internacao - mean(valid$t_internacao))^2)
+R2_val <- 1 - SS_res_val / SS_tot_val
+
+# MSE
+n_val <- nrow(valid)
+MSE_val <- sum((valid$t_internacao - predicoes_validacao)^2) / n_val
+
+# Exibindo os resultados
+# cat("R² no conjunto de validação:", R2_val, "\n")
+# cat("MSE no conjunto de validação:", MSE_val, "\n")
 
 ```
 
@@ -1083,68 +1179,18 @@ mspr
 
 
 
+## Validação
+
+
+
+O MSPR (Mean Squared Prediction Error ou Erro Quadrático Médio de Previsão) é uma métrica essencial para avaliar a precisão das previsões de um modelo. Neste estudo, o MSPR calculado para o modelo 1 selecionado no conjunto de validação foi de `r format(round(mspr, digits = 4), decimal.mark = ",")`. Quanto menor o valor do MSPR, melhor o desempenho do modelo em realizar previsões precisas. Essa métrica representa a média dos quadrados dos erros de previsão para as observações na amostra de validação.
+
+As métricas de desempenho do modelo selecionado foram analisadas nos conjuntos de treinamento e validação. No treinamento, o modelo apresentou um R² de `r format(round(R2_mod, digits = 4), decimal.mark = ",")` e um MSE de `r format(round(MSE_mod, digits = 4), decimal.mark = ",")` \textcolor{red}{1.0011}, indicando um ajuste relativamente bom aos dados. Na validação, o R² foi de aproximadamente `r format(round(summary(modelo_validacao)$r.squared, digits = 4), decimal.mark = ",")` e o MSE foi de cerca de `r format(round(MSE_val, digits = 4), decimal.mark = ",")`. Essas métricas fornecem uma avaliação do ajuste do modelo aos dados, sendo desejáveis valores mais altos de R² e mais baixos de MSE.
+
+Essas métricas são fundamentais para avaliar o desempenho do modelo, fornecendo insights valiosos para possíveis ajustes e melhorias.
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r}
-#| eval: false
------------------------------------------------------------------------------------------------------------------------------------------
-
-#----------------------------------------------------------------------------------------------------------------------------------------
-# Modelo com interação entre número de enfermeiros e região-----
-modelo_interacao <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
-                         leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
-                         facilidades_servicos + enfermeiros * regiao, data = base_new)
-
-#summary(modelo_interacao)
-```
-
-
-PIPIPIPÓPÓPÓ.......
-
-
-
-```{r}
-#| eval: false
------------------------------------------------------------------------------------------------------------------------------------------
-# Modelo de segunda ordem----
-# Criar variável de interação entre enfermeiros e facilidades_servicos
-base_new$enfermeiros_facilidades <- base_new$enfermeiros * base_new$facilidades_servicos
-
-View(base_new)
-# Modelo de segunda ordem
-completo_mod_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
-                     leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
-                     facilidades_servicos + enfermeiros_facilidades + I(enfermeiros^2) + 
-                     I(facilidades_servicos^2), data = base_new)
-
-
-```
-
-PIPIPIPÓPÓPÓ.......

@@ -1,0 +1,16 @@
+# Conclusões
+
+A presente pesquisa abrangeu uma análise ampla dos fatores associados à duração da internação hospitalar, incorporando variáveis individuais do paciente, características do tratamento e contexto hospitalar. A exploração de relações de segunda ordem e a inclusão de variáveis regionais enriqueceram a compreensão da complexidade desse fenômeno.
+
+As correlações identificadas entre a duração da internação e variáveis como risco de infecção, número de leitos, média diária de pacientes, quantidade de enfermeiros(as) e a disponibilidade de facilidades e serviços hospitalares sugerem influências significativas nesse tempo. Destaca-se a importância crítica de fatores como a disponibilidade de leitos, o número de enfermeiros(as) e a percentagem de facilidades e serviços na gestão eficaz da duração da internação.
+
+O modelo de regressão linear múltipla, mesmo sem incorporar interações ou termos de segunda ordem, demonstrou uma capacidade notável ao explicar aproximadamente 67.55% da variação na duração da internação. Resultados indicaram que o risco de infecção, região geográfica e características básicas do paciente e tratamento são elementos cruciais na determinação desse tempo. O modelo evidenciou a falta de associação estatisticamente significativa entre a idade média dos pacientes e a duração da internação.
+
+Ao considerar a complexidade das relações entre variáveis, a inclusão de interações e termos de segunda ordem proporcionou insights adicionais. A interação entre enfermeiros e a região W, por exemplo, destacou uma associação substancial entre o aumento do número de enfermeiros e uma redução mais acentuada na duração da internação. Entretanto, a análise apontou a necessidade de uma investigação mais profunda sobre a presença de multicolinearidade entre variáveis independentes.
+
+Na fase de seleção de variáveis, dois modelos foram considerados, com o Modelo com 5 Variáveis sendo escolhido devido à sua maior robustez em relação à multicolinearidade e adequação estatística. A influência de observações individuais nos parâmetros do modelo foi avaliada, destacando pontos específicos que exercem impacto considerável.
+
+A validação do modelo foi realizada utilizando o MSPR, R² e MSE nos conjuntos de treinamento e validação. O modelo apresentou um desempenho satisfatório nos dados de treinamento, com um R² de 0.6433 e um MSE de 1.0011. No entanto, no conjunto de validação, o R² foi de aproximadamente 0,4871 e o MSE foi de cerca de 3.265, indicando espaço para melhorias e ajustes.
+
+Em resumo, este estudo fornece uma visão abrangente dos fatores que influenciam a duração da internação hospitalar, destacando a importância de variáveis específicas e ressaltando a necessidade contínua de aprimoramento do modelo para melhor compreensão e previsão desse fenômeno complexo.
+I
