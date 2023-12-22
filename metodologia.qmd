@@ -1,3 +1,44 @@
 # Metodologia {#sec-metodologia}
 
-Names
+As principais fórmulas adotadas têm sua fundamentação especialmente determinada em @kutner2004.
+
+
+
+Para o cumprimento dos objetivos de pesquisa, será usado o arcabouço teórico estatístico relacionado aos modelos de regressão linear. Em síntese, os modelos de regressão linear são modelos que buscam quantificar e qualificar as relações entre uma variável depentente --- a ser explicada --- e uma ou mais variáveis independentes, que auxiliam na explicação da variável dependente. 
+
+Como se trata de uma relação de dependência no sentido estatístico, não há necessariamente uma relação de causalidade entre as variáveis. Ainda assim, a relação de dependência pode ser usada para a previsão de valores da variável dependente, a partir de valores conhecidos das variáveis independentes.
+
+A estrutura geral de um modelo de regressão linear é dada pela equação:
+
+\begin{equation}
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \ldots + \beta_n X_{ni} + \varepsilon_i 
+\end{equation}
+
+em que $y$ é a variável dependente, $x_1, x_2, \ldots, x_n$ são as variáveis independentes, $\beta_0, \beta_1, \ldots, \beta_n$ são os parâmetros do modelo e $\varepsilon_i$ é o erro aleatório.
+
+## Seleção de variáveis
+
+
+## Pressupostos de um modelo linear
+
+Um modelo de regressão linear apresenta alguns pressupostos, que devem ser verificados para que o modelo seja considerado adequado. São eles:
+
+1. Linearidade: a relação entre as variáveis deve ser linear. Caso contrário, é necessário transformar as variáveis para que a relação se torne linear;
+
+2. Normalidade: os erros devem ser normalmente distribuídos, o que se pode verificar ao analisar os resíduos do modelo;
+
+3. Homocedasticidade: os erros devem ter variância constante, o que se pode verificar ao analisar os resíduos do modelo em relação às variáveis independentes; e
+
+4. Independência: os erros devem ser independentes, o que também se pode verificar ao analisar os resíduos do modelo em relação às variáveis independentes;
+
+5. Ausência de multicolinearidade entre as variáveis: as variáveis independentes não devem ser correlacionadas entre si, o que se pode verificar ao analisar a matriz de correlação entre as variáveis independentes. O caso da multicolinearidade perfeita pode fazer com que o modelo tenha múltiplas soluções, o que torna a estimação sem validade. O caso da multicolinearidade imperfeita pode fazer com que o modelo tenha solução, mas com variâncias muito grandes --- com elevada chance de não rejeição da hipótese nula de parâmetro zero, estimativas com sinais em desacordo com toda a literatura existente, o que torna a estimação também problemática.
+
+
+
+
+## Estimação dos parâmetros
+
+
+### Testes de ausência de regressão e de significância dos parâmetros
+
+## Validação do modelo 

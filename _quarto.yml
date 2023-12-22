@@ -17,7 +17,7 @@ toc: true
 execute:
   warning: false
   echo: false
-  eval: false
+  eval: true
   message: false
 
 bibliography: references.bib
