@@ -20,6 +20,20 @@ em que $y$ é a variável dependente, $x_1, x_2, \ldots, x_n$ são as variáveis
 
 O processo de seleção de variáveis envolve processos que ajudam a identificar as variáveis relevantes para o modelo. Antes, é preciso conhecer os tipos de variáveis que podem estar presentes no modelo para além dos formatos tradicional das variáveis como são coletadas.
 
+Alguns critérios auxiliam na seleção das variáveis do model de regressão linear a ser utilizado,  como a análise do $R^{2}$, $R^{2}$ ajustado, Critério de Pressão de Mallows (Cp) e Critério de Informação Bayesiano (BIC). Nessa seleção, busca-se uma boa relaçao entre capacidade explicativa/preditiva e parcimoniosidade do modelo.
+
+O coeficiente de determinação ($R^{2}$) é uma medida de ajuste do modelo, que indica a proporção da variância da variável dependente que é explicada pelas variáveis independentes. Ele é calculado por: $$R^{2} = \frac{SQ_{reg}}{SQ_{tot}}$$ em que $SQ_{reg}$ é a soma dos quadrados da regressão e $SQ_{tot}$ é a soma dos quadrados totais. 
+
+O $R^{2}$ ajustado é uma medida de ajuste do modelo que parte do coeficiente de determinação, mas penaliza a inclusão de variáveis que não contribuem para a explicação da variável dependente. Sua fórmula é dada por $$R_{ajustado}^{2}  = 1 - \frac{(n - 1)}{n - p}\frac{SQ_{erros}}{SQ_{tot}}$$ em que $SQ_{erros}$ é a soma dos quadrados dos erros, $n$ é o número de observações e $p$ é o número de variáveis independentes.
+
+O Critério de Pressão de Mallows (Cp) é uma medida de ajuste do modelo que penaliza a inclusão de variáveis que não contribuem para a explicação da variável dependente. É calculado por $$Cp = \frac{SQ_{erros}}{MSE (X_1, \ldots, X_{p-1})} - (n - 2p)$$ em que $SQ_{erros}$ é a soma dos quadrados dos erros, $MSE$ é o erro médio quadrático, $n$ é o número de observações e $p$ é o número de parâmetros. 
+
+Nesse caso, quando não há viés na regressão do modelo de base para comparação, o valor esperado de $C_p$ é aproximadamente $p$  [@kutner2004 p. 358].
+
+O Critério de Informação Bayesiano (BIC) é uma medida de ajuste do modelo que penaliza a inclusão de variáveis que não contribuem para a explicação da variável dependente.
+
+
+
 
 ### Modelos de mais de uma ordem
 
@@ -59,7 +73,15 @@ Com essa construção, a interpretação do modelo se dá diretamente avaliando 
 
 ### Variáveis com interação
 
+Quando um modelo de regressão linear possui variáveis sem interação entre elas, diz-se tratar de um "modelo aditivo" [@kutner2004]. Entretanto, quando isso ocorre, as variáveis devem aparecer sob a forma de produto no modelo, como no exemplo a seguir:
 
+\begin{equation}
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \beta_{1, 2} X_{1i} X_{2i} + \varepsilon_i
+\end{equation}
+
+Nesse caso, o efeito de $X_1$ sobre $Y$ depende do valor de $X_2$, e vice-versa. A interpretação do modelo envolve fazer a análise de efeito de cada variável não aditiva a partir de um dado nível da outra variável com que ela se relaciona. Nesse caso, o efeito da variável $X_1$ sobre $Y$ dado $X_2$ constante é dada por: $$\beta_1 + \beta_{1, 2} X_{2i}$$.
+
+Esse prodecidmento deve ser realizado para todas as formas de interação.
 
 ### Procedimentos de seleção de variáveis (*forward, backward e stepwise*)
 
@@ -67,13 +89,13 @@ Com essa construção, a interpretação do modelo se dá diretamente avaliando 
 
 Um modelo de regressão linear apresenta alguns pressupostos, que devem ser verificados para que o modelo seja considerado adequado. São eles:
 
-1. Linearidade: a relação entre as variáveis deve ser linear. Caso contrário, é necessário transformar as variáveis para que a relação se torne linear;
+1. Linearidade: a relação entre as variáveis deve ser linear. Caso contrário, é necessário transformar as variáveis para que a relação se torne linear. Este pressuposto pode ser verificado por meio de gráficos de dispersão entre as variáveis e os resíduos;
 
-2. Normalidade: os erros devem ser normalmente distribuídos, o que se pode verificar ao analisar os resíduos do modelo;
+2. Normalidade: os erros devem ser normalmente distribuídos, o que se pode verificar ao analisar os resíduos do modelo. Pode ser verificado por meio do teste de Shapiro-Wilk e pela visualização do gráfico de distribuição normal dos resíduos;
 
-3. Homocedasticidade: os erros devem ter variância constante, o que se pode verificar ao analisar os resíduos do modelo em relação às variáveis independentes; e
+3. Homocedasticidade: os erros devem ter variância constante, o que se pode verificar ao analisar os resíduos do modelo em relação às variáveis independentes. Costuma ser verificado por meio do teste de Breusch-Pagan; e
 
-4. Independência: os erros devem ser independentes, o que também se pode verificar ao analisar os resíduos do modelo em relação às variáveis independentes;
+4. Independência: os erros devem ser independentes, o que também se pode verificar ao analisar os resíduos do modelo em relação às variáveis independentes. Pode ser verificado por meio do teste de Durbin-Watson;
 
 5. Ausência de multicolinearidade entre as variáveis: as variáveis independentes não devem ser correlacionadas entre si, o que se pode verificar ao analisar a matriz de correlação entre as variáveis independentes. O caso da multicolinearidade perfeita pode fazer com que o modelo tenha múltiplas soluções, o que torna a estimação sem validade. O caso da multicolinearidade imperfeita pode fazer com que o modelo tenha solução, mas com variâncias muito grandes --- com elevada chance de não rejeição da hipótese nula de parâmetro zero, estimativas com sinais em desacordo com toda a literatura existente, o que torna a estimação também problemática.
 

@@ -193,7 +193,7 @@ Y_i = & \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \beta_3 X_{3i} + \beta_4 X_{
 
 O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente associado à idade não é estatisticamente significativo (p-valor: `r format(round(p_values_modelo_original["idade", 4], digits = 4), decimal.mark = ",")`), sugerindo que a idade média dos pacientes não está fortemente associada à duração da internação.
 
-Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: `r format(round(p_values_modelo_original["r_infeccao", 4], digits = 6), decimal.mark = ",")` \textcolor{red}{0.001043}), indicando que um aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as Regiões (regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o Risco de Infecção, na explicação da variação na duração da internação.
+Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: `r format(round(p_values_modelo_original["r_infeccao", 4], digits = 6), decimal.mark = ",")`), indicando que um aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as Regiões (regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o Risco de Infecção, na explicação da variação na duração da internação.
 
 Considerando a complexidade das relações entre variáveis, foi incorporarado ao modelo interacões e termos de segunda ordem. Essa abordagem visa explorar nuances que podem ser negligenciadas em um modelo linear. 
 
@@ -217,6 +217,9 @@ Continuando a análise do modelo combinado, foram realizados testes importantes 
 # Normalidade------
 
 shapiro <- shapiro.test(modelo_combinado$residuals)
+
+durbin_watson <- durbinWatsonTest(modelo_combinado)
+
 ```
 
 
@@ -293,7 +296,7 @@ plot(modelo_combinado$fitted.values,
 #title("Gráfico de Resíduo Studentizado do Modelo")
 ```
 
-A análise da [Figura @fig-residuos]  reforça que a independência dos resíduos foi atendida, consolidando a confiabilidade dos resultados obtidos no modelo. A confirmação da normalidade, homocedasticidade e independência dos resíduos fortalece a robustez do modelo, oferecendo suporte à validade das inferências derivadas.
+A análise da [Figura @fig-residuos]  reforça que a independência dos resíduos foi atendida, consolidando a confiabilidade dos resultados obtidos no modelo. Além disso, o teste de Durbin-Watson para independência também não rejeitou a hipótese nula de independência, com p-valor de `r format(round(durbin_watson$p, digits = 4), decimal.mark = ",")`. A confirmação da normalidade, homocedasticidade e independência dos resíduos fortalece a robustez do modelo, oferecendo suporte à validade das inferências derivadas.
 
 ### Seleção de Variáveis
 
