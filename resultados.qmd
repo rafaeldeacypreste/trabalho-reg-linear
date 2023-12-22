@@ -1,8 +1,4 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
+
 # Resultados
 
 ## Modelo Completo e Seleção de Variáveis
@@ -162,6 +158,7 @@ modelo_combinado <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_
                          I(facilidades_servicos^2), data = base_new)
 
   # Recupera os p-valores
+p_values_modelo_original <- summary(completo_mod)$coefficients
 p_values <- summary(modelo_combinado)$coefficients
 
 
@@ -173,11 +170,10 @@ p_values <- summary(modelo_combinado)$coefficients
 #| label: tbl-reg-modelo-combinado
 #| tbl-cap: Modelo de regressão linear múltipla com interação e termos de segunda ordem.
 
-stargazer(modelo_combinado,
-          #out = "regression_table.tex", 
-          #title = "Regression Results", 
-          #label = "tab:reg", 
-          #longtable = TRUE.
+stargazer(completo_mod,
+          modelo_combinado,
+          column.labels=c("Modelo simples","Modelo segunda \n ordem e interações"),
+          model.numbers = FALSE,
           single.row=TRUE,
           report=("vc*p"),
           header = FALSE
@@ -185,7 +181,7 @@ stargazer(modelo_combinado,
 
 ```
 
-Ao considerar a influência de variáveis relacionadas ao paciente, tratamento e hospital na duração da internação, o modelo de regressão linear múltipla fornece insights valiosos, que podem ser vistos na [Tabela @tbl-reg-modelo-combinado]. Esse modelo, embora seja mais simples por não incorporar interações ou termos de segunda ordem, é notável em sua capacidade de explicar `r format(round(summary(modelo_combinado)$r.squared * 100, digits = 2), decimal.mark = ",")`% da variação na duração da internação. Isso sugere que, mesmo sem levar em conta complexidades adicionais nas relações entre as variáveis, as características básicas do paciente, seu tratamento e o ambiente hospitalar desempenham um papel crucial na determinação da duração da internação.
+Ao considerar a influência de variáveis relacionadas ao paciente, tratamento e hospital na duração da internação, o modelo de regressão linear múltipla fornece insights valiosos, que podem ser vistos na [Tabela @tbl-reg-modelo-combinado]. Esse modelo, embora seja mais simples por não incorporar interações ou termos de segunda ordem, é notável em sua capacidade de explicar `r format(round(summary(completo_mod)$r.squared * 100, digits = 2), decimal.mark = ",")`% da variação na duração da internação. Isso sugere que, mesmo sem levar em conta complexidades adicionais nas relações entre as variáveis, as características básicas do paciente, seu tratamento e o ambiente hospitalar desempenham um papel crucial na determinação da duração da internação.
 
 \begin{equation}
 \begin{split}
@@ -195,9 +191,9 @@ Y_i = & \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \beta_3 X_{3i} + \beta_4 X_{
 \end{split}
 \end{equation}
 
-O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente associado à idade não é estatisticamente significativo (p-valor: `r format(round(p_values["idade", 4], digits = 4), decimal.mark = ",")`), sugerindo que a idade média dos pacientes não está fortemente associada à duração da internação.
+O modelo inicial ressalta a relevância de certas variáveis na explicação da duração da internação. Por exemplo, o coeficiente associado à idade não é estatisticamente significativo (p-valor: `r format(round(p_values_modelo_original["idade", 4], digits = 4), decimal.mark = ",")`), sugerindo que a idade média dos pacientes não está fortemente associada à duração da internação.
 
-Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: `r format(round(p_values["r_infeccao", 4], digits = 4), decimal.mark = ",")` \textcolor{red}{0.001043}), indicando que um aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as Regiões (regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o Risco de Infecção, na explicação da variação na duração da internação.
+Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente significativo (p-valor: `r format(round(p_values_modelo_original["r_infeccao", 4], digits = 6), decimal.mark = ",")` \textcolor{red}{0.001043}), indicando que um aumento no risco de infecção está associado a um aumento na duração da internação. Além disso, os coeficientes negativos para as Regiões (regiaoNC, regiaoS, regiaoW) indicam que essas regiões têm internações mais curtas em comparação com a região NE. As demais variáveis do modelo não apresentam significância estatística uniforme, ressaltando a importância de variáveis específicas, como o Risco de Infecção, na explicação da variação na duração da internação.
 
 Considerando a complexidade das relações entre variáveis, foi incorporarado ao modelo interacões e termos de segunda ordem. Essa abordagem visa explorar nuances que podem ser negligenciadas em um modelo linear. 
 
@@ -277,16 +273,22 @@ Além disso, foi realizado o teste de Breusch-Pagan para avaliar a homocedastici
 #| label: fig-residuos
 
 
-par(mfrow=c(1,2))
+par(mfrow = c(1, 2))
 
 # Gráfico de Resíduos
-plot(modelo_combinado$fitted.values, modelo_combinado$residuals, 
-     xlab = "Valores ajustados", ylab = "Resíduos")
+plot(
+  modelo_combinado$fitted.values,
+  modelo_combinado$residuals,
+  xlab = "Valores ajustados",
+  ylab = "Resíduos"
+)
 #title("Gráfico de Resíduos do Modelo")
 
 # Gráfico de Resíduo Studentizado
-plot(modelo_combinado$fitted.values, stud0,
-     xlab = "Valores ajustados", ylab = "Resíduo Studentizado")
+plot(modelo_combinado$fitted.values,
+     stud0,
+     xlab = "Valores ajustados",
+     ylab = "Resíduo Studentizado")
 #abline(h = 0)
 #title("Gráfico de Resíduo Studentizado do Modelo")
 ```
