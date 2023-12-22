@@ -18,8 +18,50 @@ em que $y$ é a variável dependente, $x_1, x_2, \ldots, x_n$ são as variáveis
 
 ## Seleção de variáveis
 
+O processo de seleção de variáveis envolve processos que ajudam a identificar as variáveis relevantes para o modelo. Antes, é preciso conhecer os tipos de variáveis que podem estar presentes no modelo para além dos formatos tradicional das variáveis como são coletadas.
 
-Falar sobre variáveis categóricas, quadráticas
+
+### Modelos de mais de uma ordem
+
+Os modelos de mais de uma ordem são aqueles em que a variável dependente é explicada por uma ou mais variáveis independentes que podem estar em forma de alguma potência inteira maior do que 1. São os chamados "modelos polinomiais" [@kutner2004 p. 294]. Há duas razões principais para isso: 
+
+1. A relação entre a variável explicada e as variáveis explicativas é curvilínea; ou
+2. Quando a relação entre as variáveis não é curvilínea, mas pode ser aproximada por uma curva.
+
+Esta última razão tem aplicabilidade comum, e faz parte das hipóteses do presente estudo.
+
+Um exemplo de modelo de mais de uma ordem é o modelo quadrático, dado pela equação:
+
+\begin{equation}
+Y_i = \beta_0 + \beta_1 X_{1i} + \beta_{1, 1} X_{1i}^2 + \varepsilon_i
+\end{equation} em que $Y_i$ é a variável dependente, $X_{1i}$ é a variável independente, $\beta_0$ é o intercepto, $\beta_1$ é o coeficiente da variável independente e $\beta_{1, 1}$ é o coeficiente da variável independente elevada ao quadrado.
+
+Entretanto, é preciso estar atento às complicações que fórmulas quadráticas ou superiores podem acrescer à interpretação dos resultados. A depender do sinal do coeficiente da variável independente elevada ao quadrado, a curva pode ter concavidade para cima ou para baixo. Em geral, a interpretação mais relevante está em torno de eventual ponto de inflexão (mínimo ou máximo), se este fizer parte do intervalo de observação da variável independente.
+
+
+### Variáveis categóricas
+
+Variáveis categóricas também podem ser usadas em modelos de regressão linear, desde que sejam transformadas em variáveis binárias. A transformação é feita por meio da criação de novas colunas, que assumem o valor 1 quando a categoria está presente e 0 quando a categoria está ausente.
+
+Para $n$ categorias distintas, são necessárias $n-1$ colunas, pois a última categoria é a referência para as demais e estará representada pelo valor do intercepto do modelo quando as demais categorias assumirem valor $0$. Nesse caso, há uma varição da reta de regressão para cada categoria, indicando uma alteração homogênea sobre o nível da variável resposta sob efeito de todas as demais variáveis.
+
+Um exemplo de variável categórica é a filiação ou não a uma escola de medicina. Considerando $X_{1}"$ como a variável categórica, $X_{2}$ outra variável quantitativa do modelo, a interpretação do modelo se dá da seguinte forma:   
+
+\begin{equation}
+\begin{split}
+E[Y] = \beta_0 + \beta_1 (1) + \beta_2 X_{2}  = (\beta_0 + \beta_1) + \beta_2 X_{2} \:\:\:\:\:\: & \text{, se } X_{1} = 1 \\
+E[Y] = \beta_0 + \beta_1 (0) + \beta_2 X_{2}  = \beta_0 + \beta_2 X_{2} \:\:\:\:\:\: & \text{, se } X_{1} = 0
+\end{split}
+\end{equation}
+
+
+Com essa construção, a interpretação do modelo se dá diretamente avaliando a presentaça ou não da variável categórica de interesse, mantendo as demais variáveis constantes.
+
+### Variáveis com interação
+
+
+
+### Procedimentos de seleção de variáveis (*forward, backward e stepwise*)
 
 ## Pressupostos de um modelo linear
 

@@ -299,7 +299,6 @@ Na presente seção, a análise das variáveis do modelo será aprofundada, visa
 
 
 
-
 #### tabela de variáveis?//
 
 #### tabela dos modelos e estatísticas?//
