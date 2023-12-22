@@ -19,13 +19,8 @@ pacman::p_load(openxlsx,
 
 
 base <- readxl::read_xlsx("dados_60.xlsx")
-<<<<<<< HEAD
 
 # Correlações----
-=======
-#----------------------------------------------------------------------------------------------------------------------------------------
-# Correlações-----
->>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 #base para correlações  variáveis quantitativas
 base_corr <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
                      "prop_raiox","leitos","m_dia_pacientes","enfermeiros",
@@ -33,11 +28,6 @@ base_corr <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
 
 
 correl <- cor(base_corr)
-<<<<<<< HEAD
-
-=======
-#----------------------------------------------------------------------------------------------------------------------------------------
->>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # grafico das correlações----
 # nome das variáveis para o gráfico
 
@@ -60,7 +50,6 @@ panel.cor <- function(x, y, digits = 3, prefix = "", cex.cor = 1.5)
 cex.labels <- 0.9
 
 pairs(base_corr, lower.panel = panel.smooth, upper.panel = panel.cor,
-<<<<<<< HEAD
       gap = 0, row1attop = FALSE, cex.labels = cex.labels,labels = nomes_variaveis)
 
 base <- readxl::read_xlsx("dados_60.xlsx")
@@ -74,28 +63,6 @@ Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o per
 ```{r}
 
 
-=======
-      gap = 0, row1attop = FALSE, cex.labels = cex.labels)
-#----------------------------------------------------------------------------------------------------------------------------------------
-```
-
-  Ao explorar a relação entre a idade média dos pacientes e o tempo internação, foi observada uma associação modesta de 0.187, 
-o que sugere, em geral, que pacientes mais idosos podem demandar internações mais prolongadas. O risco de infecção mostrou uma 
-correlação substancial (0.632), o que indica que hospitais com maiores índices de risco infeccioso podem enfrentar internações mais
-extensas.
-  A análise das proporções de culturas de rotina (0.314) e Raio-X de Tórax de rotina (0.389) revelou associações interessantes.
-Hospitais que realizam mais culturas de rotina e exames de Raio-X de Tórax de rotina parecem enfrentar internações mais longas, o que
-sugere uma possível relação entre a extensão das investigações diagnósticas e a duração do tratamento.
-
-  Destaca-se que a disponibilidade de leitos, o número de enfermeiros(as) e o percentual de facilidades e serviços apresentaram
-correlações positivas e consistentes (de 0.405, 0.379 e 0.513 respectivamente) com a duração da internação. Esses resultados ressaltam 
-a importância crítica desses fatores na gestão eficaz do tempo de internação, evidenciando a necessidade de estruturas hospitalares
-adequadas e recursos humanos suficientes. Alem disso, a média diária de pacientes apresentou uma correlação positiva de 0,451 com o
-tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
-
-```{r, echo=FALSE}
-#----------------------------------------------------------------------------------------------------------------------------------------
->>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # Modeloss ----
 
 # nova base para correção das categorias das v.a's qualitativas
@@ -111,10 +78,6 @@ base_new <-
 # Corrigir as categorias da variável regiao
 base_new$regiao <- factor(base$regiao, levels = c(1, 2, 3, 4), labels = c("NE", "NC", "S", "W"))
 
-<<<<<<< HEAD
-=======
-#----------------------------------------------------------------------------------------------------------------------------------------
->>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # Modelo linear múltiplo completo----
 completo_mod <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
                      leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
@@ -579,14 +542,11 @@ mspr
 
 
 
-<<<<<<< HEAD
 ```{r}
 #| eval: false
 -----------------------------------------------------------------------------------------------------------------------------------------
-=======
 ```{r, echo=FALSE}
 #----------------------------------------------------------------------------------------------------------------------------------------
->>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 # Modelo com interação entre número de enfermeiros e região-----
 modelo_interacao <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
                          leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
@@ -600,7 +560,6 @@ PIPIPIPÓPÓPÓ.......
 
 
 
-<<<<<<< HEAD
 ```{r}
 #| eval: false
 -----------------------------------------------------------------------------------------------------------------------------------------
@@ -614,9 +573,7 @@ completo_mod_segunda_ordem <- lm(t_internacao ~ idade + r_infeccao + prop_cultur
                      leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
                      facilidades_servicos + enfermeiros_facilidades + I(enfermeiros^2) + 
                      I(facilidades_servicos^2), data = base_new)
-=======
 ```{r, echo=FALSE}
->>>>>>> 0d55b170672cf129680b3bbcda77d6670a0dd560
 
 
 ```
