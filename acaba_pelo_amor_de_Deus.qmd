@@ -1,0 +1,41 @@
+---
+title: "validação e conclusão"
+format: pdf
+editor: visual
+---
+
+## validação
+
+```{r}
+# teste do modelo no banco de dados completo-----
+base_dado <- banco
+
+library(dplyr)
+
+# Adicione variáveis dummy para a variável qualitativa escola_medicina
+base_dado <- base_dado %>%
+  mutate(escola_medicinaSim = ifelse(escola_medicina == 1, 1, 0),
+         escola_medicinaNao = ifelse(escola_medicina == 2, 1, 0))
+
+# Adicione variáveis dummy para a variável qualitativa regiao
+base_dado <- base_dado %>%
+  mutate(regiaoNE = ifelse(regiao == 1, 1, 0),
+         regiaoNC = ifelse(regiao == 2, 1, 0),
+         regiaoS = ifelse(regiao == 3, 1, 0),
+         regiaoW = ifelse(regiao == 4, 1, 0))
+
+modelo_select1_dado <- lm(t_internacao~idade + r_infeccao + regiaoW + 
+                       facilidades_servicos+ regiaoS*enfermeiros,
+                     data = base_dado)
+summary(modelo_select1_dado)
+```
+
+#### último parágrafo:
+
+Ao aplicar o modelo reduzido ao conjunto de dados completo, os resultados revelam um R² ajustado de 0.4564, indicando que possui a capacidade de explicar aproximadamente 45.64% da variabilidade observada no tempo de internação. Esse valor, considerado moderado, sugere uma razoável capacidade de adaptação do modelo às complexidades dos dados abrangentes.
+
+# conclusão
+
+#### último parágrafo:
+
+No contexto do conjunto de dados completo, a aplicação do modelo reduzido resultou em um R² ajustado de 0.4564. Este valor, indicando a habilidade do modelo em explicar cerca de 45.64% da variabilidade no tempo de internação, é considerado moderado, sugerindo uma adaptação razoável do modelo às complexidades presentes nos dados. Esses resultados contribuem para uma visão completa dos fatores que influenciam a duração da internação hospitalar, destacando variáveis específicas e ressaltando a necessidade contínua de aprimoramento do modelo para melhor compreensão e previsão desse fenômeno complexo.

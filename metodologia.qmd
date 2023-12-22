@@ -20,7 +20,7 @@ em que $y$ é a variável dependente, $x_1, x_2, \ldots, x_n$ são as variáveis
 
 O processo de seleção de variáveis envolve processos que ajudam a identificar as variáveis relevantes para o modelo. Antes, é preciso conhecer os tipos de variáveis que podem estar presentes no modelo para além dos formatos tradicional das variáveis como são coletadas.
 
-Alguns critérios auxiliam na seleção das variáveis do model de regressão linear a ser utilizado,  como a análise do $R^{2}$, $R^{2}$ ajustado, Critério de Pressão de Mallows (Cp) e Critério de Informação Bayesiano (BIC). Nessa seleção, busca-se uma boa relaçao entre capacidade explicativa/preditiva e parcimoniosidade do modelo.
+Alguns critérios auxiliam na seleção das variáveis do modelo de regressão linear a ser utilizado,  como a análise do $R^{2}$, $R^{2}$ ajustado, Critério de Pressão de Mallows (Cp) e Critério de Informação Bayesiano (BIC). Nessa seleção, busca-se uma boa relaçao entre capacidade explicativa/preditiva e parcimoniosidade do modelo.
 
 O coeficiente de determinação ($R^{2}$) é uma medida de ajuste do modelo, que indica a proporção da variância da variável dependente que é explicada pelas variáveis independentes. Ele é calculado por: $$R^{2} = \frac{SQ_{reg}}{SQ_{tot}}$$ em que $SQ_{reg}$ é a soma dos quadrados da regressão e $SQ_{tot}$ é a soma dos quadrados totais. 
 
@@ -68,7 +68,7 @@ E[Y] = \beta_0 + \beta_1 (0) + \beta_2 X_{2}  = \beta_0 + \beta_2 X_{2} \:\:\:\:
 \end{equation}
 
 
-Com essa construção, a interpretação do modelo se dá diretamente avaliando a presentaça ou não da variável categórica de interesse, mantendo as demais variáveis constantes.
+Com essa construção, a interpretação do modelo se dá diretamente avaliando a presença ou não da variável categórica de interesse, mantendo as demais variáveis constantes.
 
 ### Variáveis com interação
 

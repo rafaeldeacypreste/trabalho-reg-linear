@@ -14,3 +14,6 @@ A validação do modelo foi realizada utilizando o MSPR, R² e MSE nos conjuntos
 
 Em resumo, este estudo fornece uma visão abrangente dos fatores que influenciam a duração da internação hospitalar, destacando a importância de variáveis específicas e ressaltando a necessidade contínua de aprimoramento do modelo para melhor compreensão e previsão desse fenômeno complexo.
 I
+
+
+No contexto do conjunto de dados completo, a aplicação do modelo reduzido resultou em um R² ajustado de 0,4564. Este valor, indicando a habilidade do modelo em explicar cerca de 45,64% da variabilidade no tempo de internação, é considerado moderado, sugerindo uma adaptação razoável do modelo às complexidades presentes nos dados. Esses resultados contribuem para uma visão completa dos fatores que influenciam a duração da internação hospitalar, destacando variáveis específicas e ressaltando a necessidade contínua de aprimoramento do modelo para melhor compreensão e previsão desse fenômeno complexo.

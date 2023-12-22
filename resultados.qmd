@@ -20,7 +20,7 @@ pacman::p_load(openxlsx,
                patchwork)
 library(readxl)
 dados <- read_excel("dados_60.xlsx")
-
+banco <- read_excel("dados/Dados_trabalho_20232.xlsx")
 
 
 # > 3.1 Boxplots e histogramas ####
@@ -374,7 +374,6 @@ Observando então a [Figura @fig-hist], percebe-se que a influência dos *outlie
 
 Observando as variáveis qualitativas, temos como característica, que todas são nominais. No histograma ([Figura @fig-hist-discretas]), temos que a maioria não possui filiação com escola de medicina, observação que é confirmada através da Tabela 3, já que, 81,67% diz não ter.
 
-![](Tabela-quali.png){.unnumbered #fig:tabela3 width="429" caption="Tabela 3"}
 
 ```{r}
 #| label: fig-hist-discretas
@@ -387,6 +386,8 @@ ggarrange(hist7, hist8,
 
 ```
 
+
+![](Tabela-quali.png){.unnumbered #fig:tabela3 width="429" caption="Tabela 3"}
 
 ```{r}
 #| eval: false
@@ -634,7 +635,6 @@ Em contrapartida, o coeficiente para o Risco de Infecção é estatisticamente s
 
 Considerando a complexidade das relações entre variáveis, foi incorporarado ao modelo interacões e termos de segunda ordem. Essa abordagem visa explorar nuances que podem ser negligenciadas em um modelo linear. 
 
-\textcolor{red}{A consideração específica da interação entre enfermeiros e a região W, por exemplo, apresenta um coeficiente negativo significativo (-2.651), o que indica que a região W demonstra uma associação substancial entre o aumento do número de enfermeiros e a redução mais acentuada na duração da internação em comparação com outras regiões geográficas.}
 
 O termo quadrático para o número de enfermeiros $(X_{11i}^{2})$ apresenta um coeficiente negativo, sugerindo a possibilidade de saturação no impacto positivo do aumento no número de enfermeiros, indicando que, após um certo ponto, um aumento adicional pode não ter o mesmo efeito positivo na redução da duração da internação. Por outro lado, o termo quadrático para facilidades e servicos disponíveis $(X_{12i}^{2})$ não demonstra significância estatística (p-valor: `r format(round(p_values["I(facilidades_servicos^2)", 4], digits = 4), decimal.mark = ",")`), sugerindo que a relação quadrática entre essa variável e a duração da internação não é estatisticamente robusta.
 
@@ -741,9 +741,9 @@ Na presente seção, a análise das variáveis do modelo será aprofundada, visa
 
 
 
-#### tabela de variáveis?//
+![](variaveis.png){height="350"}
 
-#### tabela dos modelos e estatísticas?//
+![](tabela_modelos.png)
 
 ```{r}
 #| output: false
@@ -795,7 +795,7 @@ tabela_modelos
 ```
 
 ```{r}
-#| fig-height: 6
+#| fig-height: 5
 #| label: fig-ajuste-modelos
 #| fig-cap: Gráficos de R², R² ajustado, Cp de Mallows e BIC.
 
@@ -1106,11 +1106,36 @@ modelo_validacao <- lm(t_internacao~idade + r_infeccao + regiaoW +
 # anova(modelo_validacao)
 # anova(modelo_select1)
 
+names(banco) <- c("id","t_internacao","idade","r_infeccao",
+"prop_culturas", "prop_raiox", "leitos", "escola_medicina", "regiao", "m_dia_pacientes", "enfermeiros", "facilidades_servicos")
+
+
+# teste do modelo no banco de dados completo-----
+base_dado <- banco
+
+library(dplyr)
+
+# Adicione variáveis dummy para a variável qualitativa escola_medicina
+base_dado <- base_dado %>%
+  mutate(escola_medicinaSim = ifelse(escola_medicina == 1, 1, 0),
+         escola_medicinaNao = ifelse(escola_medicina == 2, 1, 0))
+
+# Adicione variáveis dummy para a variável qualitativa regiao
+base_dado <- base_dado %>%
+  mutate(regiaoNE = ifelse(regiao == 1, 1, 0),
+         regiaoNC = ifelse(regiao == 2, 1, 0),
+         regiaoS = ifelse(regiao == 3, 1, 0),
+         regiaoW = ifelse(regiao == 4, 1, 0))
+
+modelo_select1_dado <- lm(t_internacao~idade + r_infeccao + regiaoW + 
+                       facilidades_servicos+ regiaoS*enfermeiros,
+                     data = base_dado)
 
 
 stargazer(modelo_select1,
           modelo_validacao,
-          column.labels=c("Modelo de treinamento", "Modelo de validação"),
+          modelo_select1_dado,
+          column.labels=c("Modelo de treinamento", "Modelo de validação", "Modelo completo"),
           model.numbers = FALSE,
           single.row=TRUE,
           report=("vc*p"),
@@ -1190,6 +1215,7 @@ As métricas de desempenho do modelo selecionado foram analisadas nos conjuntos 
 Essas métricas são fundamentais para avaliar o desempenho do modelo, fornecendo insights valiosos para possíveis ajustes e melhorias.
 
 
+Ao aplicar o modelo reduzido ao conjunto de dados completo, os resultados revelam um R² ajustado de 0,4564, indicando que possui a capacidade de explicar aproximadamente 45,64% da variabilidade observada no tempo de internação. Esse valor, considerado moderado, sugere uma razoável capacidade de adaptação do modelo às complexidades dos dados abrangentes.
 
 
 
