@@ -18,7 +18,7 @@ pacman::p_load(openxlsx, tidyverse, ggpubr, car, e1071,leaps,MASS,lmtest)
 
 
 base <- readxl::read_xlsx("dados_60.xlsx")
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 # Correlações-----
 #base para correlações  variáveis quantitativas
 base_corr <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
@@ -27,7 +27,7 @@ base_corr <- base[,c("t_internacao","idade","r_infeccao","prop_culturas",
 
 
 correl <- cor(base_corr)
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 # grafico das correlações----
 # nome das variáveis para o gráfico
 
@@ -50,7 +50,7 @@ cex.labels <- 1.5
 
 pairs(base_corr, lower.panel = panel.smooth, upper.panel = panel.cor,
       gap = 0, row1attop = FALSE, cex.labels = cex.labels)
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 ```
 
   Ao explorar a relação entre a idade média dos pacientes e o tempo internação, foi observada uma associação modesta de 0.187, 
@@ -68,7 +68,7 @@ adequadas e recursos humanos suficientes. Alem disso, a média diária de pacien
 tempo de internação, o que indica um aumento no tempo das internações em hospitais que apresentam maior demanda diária.
 
 ```{r, echo=FALSE}
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 # Modeloss ----
 
 # nova base para correção das categorias das v.a's qualitativas
@@ -79,7 +79,7 @@ base_new$escola_medicina <- factor(base$escola_medicina, levels = c(1, 2), label
 # Corrigir as categorias da variável regiao
 base_new$regiao <- factor(base$regiao, levels = c(1, 2, 3, 4), labels = c("NE", "NC", "S", "W"))
 
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 # Modelo linear múltiplo completo----
 completo_mod <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
                      leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
@@ -103,7 +103,7 @@ variáveis do modelo não apresentam significância estatística uniforme, ressa
 Risco de Infecção, na explicação da variação na duração da internação.
 
 ```{r, echo=FALSE}
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 # Modelo com interação entre número de enfermeiros e região-----
 modelo_interacao <- lm(t_internacao ~ idade + r_infeccao + prop_culturas + prop_raiox +
                          leitos + escola_medicina + regiao + m_dia_pacientes + enfermeiros + 
@@ -118,7 +118,7 @@ PIPIPIPÓPÓPÓ.......
 
 
 ```{r, echo=FALSE}
------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------
 # Modelo de segunda ordem----
 # Criar variável de interação entre enfermeiros e facilidades_servicos
 base_new$enfermeiros_facilidades <- base_new$enfermeiros * base_new$facilidades_servicos
