@@ -30,8 +30,7 @@ O Critério de Pressão de Mallows (Cp) é uma medida de ajuste do modelo que pe
 
 Nesse caso, quando não há viés na regressão do modelo de base para comparação, o valor esperado de $C_p$ é aproximadamente $p$  [@kutner2004 p. 358].
 
-O Critério de Informação Bayesiano (BIC) é uma medida de ajuste do modelo que penaliza a inclusão de variáveis que não contribuem para a explicação da variável dependente.
-
+O Critério de Informação Bayesiano (BIC) é uma medida de ajuste do modelo que penaliza a inclusão de variáveis que não contribuem para a explicação da variável dependente. É calculado por $$BIC = n\ln(SQ_{erros, p}) - n\ln(n) + p\ln(n)$$ 
 
 
 
@@ -85,6 +84,17 @@ Esse prodecidmento deve ser realizado para todas as formas de interação.
 
 ### Procedimentos de seleção de variáveis (*forward, backward e stepwise*)
 
+Há também procedimentos de seleção de variáveis que podem ser usados para a seleção de variáveis. São eles:
+
+1. *Forward*: o procedimento parte de um modelo com apenas o intercepto e vai adicionando variáveis, uma a uma, até que não seja possível adicionar mais nenhuma variável com significância estatística. A adição de variáveis é feita com base no no menor p-valor.
+
+2. *Backward*: fazendo o processo inverso do anterior, o procedimento parte de um modelo com todas as variáveis e vai retirando variáveis do modelo, uma a uma de acordo com seu p-valor, até que todas as variáveis sejam significativas do ponto de vista estatístico.
+
+3. *Stepwise*: o procedimento parte de um modelo com apenas o intercepto e vai adicionando ou retirando variáveis, uma a uma, até que não seja possível adicionar ou seja necessário retirar alguma variável com significância estatística. O procedimento termina quando se encontra o "melhor" modelo [@kutner2004 pp. 364-6]. 
+
+
+
+
 ## Pressupostos de um modelo linear
 
 Um modelo de regressão linear apresenta alguns pressupostos, que devem ser verificados para que o modelo seja considerado adequado. São eles:
@@ -104,7 +114,67 @@ Um modelo de regressão linear apresenta alguns pressupostos, que devem ser veri
 
 ## Estimação dos parâmetros
 
+Os parâmetros do modelo são estimados por meio do método dos mínimos quadrados ordinários (MQO). O método consiste em minimizar a soma dos quadrados dos resíduos, ou seja, a soma dos quadrados das diferenças entre os valores observados e os valores estimados pelo modelo.
+
+A estrutura geral do modelo de regressão linear em forma matricial é dada pela equação:
+
+\begin{equation}
+\mathbf{Y}_{[n \times 1]} = \mathbf{X'}_{[n \times p]}\boldsymbol{\beta}_{[p \times 1]} + \boldsymbol{\varepsilon}_{[n \times 1]}
+\end{equation} em que $\mathbf{Y}$ é o vetor de variáveis dependentes, $\mathbf{X}$ é a matriz de variáveis independentes, $\boldsymbol{\beta}$ é o vetor de parâmetros e $\boldsymbol{\varepsilon}$ é o vetor de erros aleatórios.
+
+Os parâmetros são estimados por meio da equação:
+
+\begin{equation}
+\boldsymbol{b} = (\mathbf{X'X})^{-1}\mathbf{X'Y}
+\end{equation} em que $\boldsymbol{b}$ é o vetor de parâmetros estimados.
+
+Para fazer inferências e os testes de hipóteses, é necessário estimar a matriz de variância e covariância dos parâmetros. Isso pode ser feito a partir da estimação dos parâmetros e por meio da equação:
+
+\begin{equation}
+\mathbf{Var}(\boldsymbol{b}) = \sigma^2(\mathbf{X'X})^{-1}
+\end{equation} em que $\mathbf{V}(\boldsymbol{b})$ é a matriz de variância e covariância dos parâmetros e $\sigma^2$ é a variância dos erros aleatórios. 
+
+Por fim, como os erros aleatórios não são observados, é preciso estimar a variância dos erros aleatórios. Isso pode ser feito por meio da equação:
+
+\begin{equation}
+\mathbf{Var}(\boldsymbol{b}) = \frac{SQ_{erros}}{n - p} \sigma^2(\mathbf{X'X})^{-1} = MSE(\mathbf{X'X})^{-1}
+\end{equation} em que $\hat{\sigma}^2$ é a estimativa da variância dos erros aleatórios, $SQ_{erros}$ é a soma dos quadrados dos erros, $n - p$ é o número de graus de liberdade do modelo, e $MSE$ é o erro médio quadrático.
+
+
+
 
 ### Testes de ausência de regressão e de significância dos parâmetros
 
+
+A primeira análise de um modelo consiste em testar a hipótese nula de ausência de regressão. Isso é feito por meio de um teste F, cuja estatística é dada por:
+
+\begin{equation}
+F = \frac{SQ_{reg}}{p - 1} \div \frac{SQ_{erros}}{n - p}
+\end{equation} em que $SQ_{reg}$ é a soma dos quadrados da regressão, $p - 1$ é o número de graus de liberdade da regressão, $SQ_{erros}$ é a soma dos quadrados dos erros e $n - p$ é o número de graus de liberdade dos erros. 
+
+Se os erros tiverem distribuição normal, a estatística $F$ segue uma distribuição $F$ com $p - 1$ e $n - p$ graus de liberdade. 
+
+Já os a validade estatística dos parâmetros pode ser testada por meio de um teste $t-student$, cuja estatística é dada por:
+
+\begin{equation}
+t^* = \frac{b_j - \beta_j}{\sqrt{\mathbf{s^2}(b_j)}}
+\end{equation} em que $b_j$ é o parâmetro estimado, $\beta_j$ é o parâmetro teórico, $\mathbf{s^2}(b_j)$ é a variância do parâmetro estimado e $t*$ é a estatística do teste que tem distribuição $t-student_{(n-p)}$. Normalmente, testa-se a hipótese nula de que o parâmetro é igual a zero, ou seja, $H_0: \beta_j = 0$. 
+
+
 ## Validação do modelo 
+
+Por fim, após todos os procedimentos acima indicados, deve-se testar a validade do modelo e sua capacidade de generalização. Para isso, é preciso testar o modelo em uma amostra diferente daquela usada para a estimação dos parâmetros.
+
+No caso em análise, será calculado um modelo com uma amostra de tamanho 60. 
+
+Em primeiro lugar, será calculado um novo modelo com os demais dados do problema, que fazem parte do conjunto de validação. Os parâmetros deste modelo são comparados aos parâmetros do modelo do conjunto de treinamento. Caso haja estabilidade dos parâmetros, pode-se dizer que o modelo é consistente com toda a população.
+
+Em seguida, será calculado o erro médio quadrático (MSE) do modelo originalmente treinado no conjunto de validação. O MSE é calculado por meio da equação:
+
+\begin{equation}
+MSE = \frac{SQ_{erros}}{n - p}
+\end{equation} em que $SQ_{erros}$ é a soma dos quadrados dos erros, $n - p$ é o número de graus de liberdade do modelo.
+
+Espera-se, com isso, que o modelo tenha um MSE próximo ao MSE do modelo de treinamento. Teste semelhante pode ser feito com o coeficiente de determinação ($R^{2}$) e o $R^{2}$ ajustado.
+
+Por fim, caso o modelo escolhido se comporte bem nas duas análises indicadas acima, estima-se o mesmo modelo, desta vez utilizando o conjunto de dados completo. Por se tratar de um tamanho de amostra maior, espera-se que a precisão do modelo seja mais elevada. Com isso, tem-se um modelo final, que pode ser usado para a explicar a relação entre as variáveis e para a previsão de valores da variável dependente a partir de valores conhecidos das variáveis independentes.
