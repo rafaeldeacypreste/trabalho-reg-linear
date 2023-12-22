@@ -746,6 +746,8 @@ Na presente seção, a análise das variáveis do modelo será aprofundada, visa
 #### tabela dos modelos e estatísticas?//
 
 ```{r}
+#| output: false
+
 # seleção de variáveis
 
 # stepwise
@@ -793,6 +795,10 @@ tabela_modelos
 ```
 
 ```{r}
+#| fig-height: 6
+#| label: fig-ajuste-modelos
+#| fig-cap: Gráficos de R², R² ajustado, Cp de Mallows e BIC.
+
 ## gráficos de r2, r2 ajustado, cp e bic ----
 n_parametros<-as.numeric(rownames(summary(subset_modelo)$which))+1
 par(mfrow = c(2, 2))
@@ -807,7 +813,7 @@ plot_bic <- plot(n_parametros,melhores_modelos$bic,xlab="N° de parâmetros",yla
 
 ```
 
-Ao analisar o crescimento nos níveis dos gráficos em relação ao $R^{2}$, $R^{2}$ ajustado, Critério de Pressão de Mallows (Cp) e Critério de Informação Bayesiano (BIC) até 6 parâmetros, observa-se um aumento em ambos os indicadores até atingir esse ponto. Contudo, ao aplicar métodos de seleção de variáveis, como o Backward e o Stepwise, é escolhido o modelo que mantém 7 parâmetros, enquanto no método Forward, nenhuma variável é removida. Diante dessa divergência, optou-se por trabalhar com dois modelos distintos, buscando determinar qual deles melhor atende aos objetivos específicos do trabalho.
+Como se pode ver na [Figura @fig-ajuste-modelos], ao analisar o crescimento nos níveis dos gráficos em relação ao $R^{2}$, $R^{2}$ ajustado, Critério de Pressão de Mallows (Cp) e Critério de Informação Bayesiano (BIC) até 6 parâmetros, observa-se um aumento em ambos os indicadores até atingir esse ponto. Contudo, ao aplicar métodos de seleção de variáveis, como o *Backward* e o *Stepwise*, é escolhido o modelo que mantém 7 parâmetros, enquanto no método *Forward*, nenhuma variável é removida. Diante dessa divergência, optou-se por trabalhar com dois modelos distintos, buscando determinar qual deles melhor atende aos objetivos específicos do trabalho.
 
 Na análise dos modelos de regressão escolhidos, destaca-se o Modelo com 5 Variáveis, que incorpora as características de idade, risco de infecção, regiaoW, facilidades e servicos disponíveis e interaçao da regiaoS com o número de enfermeiros. Expresso pela equação:
 
@@ -816,13 +822,13 @@ $$
 $$
 
 
-
-
 Além disso, o Modelo com 6 Variáveis expande a abordagem ao incorporar as variáveis de idade, risco de infecção, regiaoW, termo quadrático de facilidades e servicos disponíveis, interação entre regiaoNC e número de enfermeiros e interação entre a regiaoS e número de enfermeiros. A equação do modelo é expressa por:
 
 $$
  Y_{i}= \beta _{0}+\beta _{1}X_{2}+\beta _{2}X_{3}+\beta _{3}X_{10}+\beta _{4}X_{13}^{2}+\beta _{5}X_{8}X_{12}+\beta _{6}X_{9}X_{12}+\varepsilon_{i}
 $$
+
+
 
 ```{r}
 # modelos escolhidos-----
@@ -848,30 +854,67 @@ base_mods <- base_mods %>%
 modelo_select1 <- lm(t_internacao~idade + r_infeccao + regiaoW + 
                        facilidades_servicos+ regiaoS*enfermeiros,
                      data = base_mods)
-summary(modelo_select1)
+# summary(modelo_select1)
 
 modelo_select2 <- lm(t_internacao~ idade+ r_infeccao +regiaoW+
                        I(facilidades_servicos^2)+ regiaoNC*enfermeiros+
                        regiaoS*enfermeiros, data = base_mods)
-summary(modelo_select2)
+# summary(modelo_select2)
 
 
 
 ```
 
+
+Ambos os modelos estão representados na [Tabela @tbl-reg-modelo-teste]. O Modelo 1 apresenta um coeficiente de determinação de `r format(round(summary(modelo_select1)$r.squared, digits = 4), decimal.mark = ",")`, enquanto o Modelo 2 apresenta um coeficiente de determinação de `r format(round(summary(modelo_select2)$r.squared, digits = 4), decimal.mark = ",")`. Esses resultados indicam que o Modelo 1 explica `r format(round(summary(modelo_select1)$r.squared * 100, digits = 2), decimal.mark = ",")`% da variabilidade na duração da internação, enquanto o Modelo 2 explica `r format(round(summary(modelo_select2)$r.squared * 100, digits = 2), decimal.mark = ",")`% da variabilidade na duração da internação. Assim, o Modelo 1 parece ser mais parcimonioso, pois explica uma proporção maior da variabilidade na duração da internação com menos variáveis.
+
 ```{r}
+
+```{r}
+#| output: asis
+#| label: tbl-reg-modelo-teste
+#| tbl-cap: Estatísticas dos Modelos 1 e 2.
+
+stargazer(modelo_select1,
+          modelo_select2,
+          column.labels=c("Modelo 1","Modelo 2"),
+          model.numbers = FALSE,
+          single.row=TRUE,
+          report=("vc*p"),
+          header = FALSE
+          )
+
+```
+
+
+```{r}
+#| label: fig-ajuste-modelos-1
+#| fig-cap: Gráfico de Distribuição de Probabilidade Normal do Modelo 1.
+
 # análise dos pressupostos dos modelos selecionados----
 
 # normalidade----
-shapiro.test(modelo_select1$residuals)
-shapiro.test(modelo_select2$residuals)
+shapiro_modelo1 <- shapiro.test(modelo_select1$residuals)$p.value
+shapiro_modelo2 <- shapiro.test(modelo_select2$residuals)$p.value
 
 qqplot.data(modelo_select1$residuals, "Resíduos")
+
+```
+
+```{r}
+#| label: fig-ajuste-modelos-2
+#| fig-cap: Gráfico de Distribuição de Probabilidade Normal do Modelo 2.
 qqplot.data(modelo_select2$residuals, "Resíduos")
+```
+
+```{r}
+#| fig-height: 5.5
+#| label: fig-independencia
+#| fig-cap: Gráficos de Resíduos e Resíduos Studentizados vs Valores Ajustados dos Modelos 1 e 2.
 
 # homogeneidade breush pagan-----
-bptest(modelo_select1)
-bptest(modelo_select2)
+bp_modelo1 <- bptest(modelo_select1)
+bp_modelo2 <- bptest(modelo_select2)
 
 # residuos studentzados 
 stud1 <- rstudent(modelo_select1)
@@ -892,6 +935,15 @@ plot(modelo_select2$fitted.values, stud2,xlab = "Valores ajustados",ylab = "Res�
 
 ```
 
+
+Os testes de normalidade também podem ser realizados. O teste de Shapiro-Wilk para o modelo 1 não rejeitou a hipótese nula de não normalidade, com p-valor de `r format(round(shapiro_modelo1, digits = 4), decimal.mark = ",")`. O teste de Shapiro-Wilk para o modelo 2 também não rejeitou a hipótese nula de não normalidade, com p-valor de `r format(round(shapiro_modelo2, digits = 4), decimal.mark = ",")`. Além disso, os gráficos de resíduos e resíduos studentizados para ambos os modelos não apresentam padrões claros, sugerindo que os resíduos podem ser considerados normalmente distribuídos,  como se pode ver nas Figuras [-@fig-ajuste-modelos-1] e [-@fig-ajuste-modelos-2].
+
+Com respeito à homogeneidade da variância, o teste de Breusch-Pagan para o modelo 1 não rejeitou a hipótese nula de homogeneidade, com p-valor de `r format(round(bp_modelo1$p.value, digits = 4), decimal.mark = ",")`. O teste de Breusch-Pagan para o modelo 2 também não rejeitou a hipótese nula de homogeneidade, com p-valor de `r format(round(bp_modelo2$p.value, digits = 4), decimal.mark = ",")`. Conclusões semelhantes podem ser visualizadas na [Figura @fig-independencia].
+
+
+
+
+
 ```{r}
 
 ## Teste linear geral----
@@ -899,23 +951,21 @@ plot(modelo_select2$fitted.values, stud2,xlab = "Valores ajustados",ylab = "Res�
 # H1: modelo completo
 # com nivel de 5% de significanca NAO rejeita H0
 resultado_teste1 <- anova(modelo_select1, modelo_combinado)
-resultado_teste1
+
 resultado_teste2 <- anova(modelo_select2, modelo_combinado)
-resultado_teste2
 
 ## Multicolinearidade ----
 # calculo do vif
-library(car)
 
-(vif<-vif(modelo_select1)) 
-mean(vif)
+vif<-vif(modelo_select1)
+vif_modelo1 <- mean(vif)
 
-(vif<-vif(modelo_select2)) 
-mean(vif)
+vif<-vif(modelo_select2)
+vif_modelo2 <- mean(vif)
 ```
 
 Com base apenas na avaliação da multicolinearidade, o modelo 1 pode ser
-considerado um pouco mais robusto em relação a esse aspecto, apresentando uma média (2.202784) de VIF (Fator de Inflação da Variância) inferior em comparação com o modelo 2 (3.021946). Além disso, os resultados dos testes lineares gerais entre os modelos reduzidos e completos indicam que a inclusão das variáveis adicionais não resulta em uma melhoria estatisticamente significativa na explicação do tempo de internação para ambos os modelos selecionados. Em ambas as comparações, o p-valor associado ao teste F é maior que o nível de significância de 5%, levando à não rejeição da hipótese nula (H0) de que o modelo reduzido é suficiente. Assim, considerando a robustez em relação à multicolinearidade, evidenciada pela média de VIF, e a adequação estatística dos modelos, optamos por escolher o modelo 1 como a abordagem mais parcimoniosa para explicar a variabilidade no tempo de internação.
+considerado um pouco mais robusto em relação a esse aspecto, apresentando uma média (`format(round(vif_modelo1, digits = 4), decimal.mark = ",")`) de VIF (Fator de Inflação da Variância) inferior em comparação com o modelo 2 (`format(round(vif_modelo2, digits = 4), decimal.mark = ",")`). Além disso, os resultados dos testes lineares gerais entre os modelos reduzidos e completos indicam que a inclusão das variáveis adicionais não resulta em uma melhoria estatisticamente significativa na explicação do tempo de internação para ambos os modelos selecionados. Em ambas as comparações, o p-valor associado ao teste F é maior que o nível de significância de 5%, levando à não rejeição da hipótese nula (H0) de que o modelo reduzido é suficiente. Assim, considerando a robustez em relação à multicolinearidade, evidenciada pela média de VIF, e a adequação estatística dos modelos, optamos por escolher o modelo 1 como a abordagem mais parcimoniosa para explicar a variabilidade no tempo de internação.
 
 
 
